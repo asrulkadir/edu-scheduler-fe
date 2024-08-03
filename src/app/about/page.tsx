@@ -1,3 +1,5 @@
+'use client';
+
 import Header from "@/components/Header";
 
 export default function Home() {
@@ -5,7 +7,7 @@ export default function Home() {
     <>
       <Header />
       <div>
-        <h1>Home Page</h1>
+        <h1>About Page</h1>
       </div>
     </>
   );
