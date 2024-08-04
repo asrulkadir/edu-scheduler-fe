@@ -19,7 +19,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-[#497B9D] to-[#3B81F6]">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-primary-light to-primary-dark">
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded shadow-md">
         <h1 className="text-2xl font-bold text-center">Login Page</h1>
         <Form

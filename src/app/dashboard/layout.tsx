@@ -1,6 +1,5 @@
 'use client';
 import NavComp from '@/components/Navigation';
-import { colors } from '@/utils/colors';
 import { usePathname } from 'next/navigation';
 import { routes } from '@/utils/routes';
 import { Layout } from 'antd';
@@ -17,14 +16,13 @@ export default function DashboardLayout({
   return (
     <Layout>
       <Sider
-        style={{ backgroundColor: colors.siderBgColor, color: colors.textColorDark }}
+        className='bg-primary-dark text-white'
       >
         <NavComp />
       </Sider>
       <Layout>
         <Header
-          style={{ backgroundColor: colors.headerBgColor, color: colors.textColorDark}}
-          className='sticky top-0 left-0 w-full h-16 bg-white shadow-md flex items-center justify-between'
+          className='sticky top-0 left-0 w-full h-16 bg-secondary shadow-md flex items-center justify-between'
         >
           <h1 className='text-xl font-bold'>
             {
@@ -33,8 +31,7 @@ export default function DashboardLayout({
           </h1>
         </Header>
         <Content
-          style={{ backgroundColor: colors.contentBgColor, color: colors.textColorDark }}
-          className='flex min-h-screen flex-col p-4'
+          className='flex min-h-screen flex-col p-4 bg-gray-100'
         >
           { children }
         </Content>
