@@ -51,7 +51,7 @@ export const routes = [
   },
   {
     name: "Siswa",
-    href: "/dashboard/STUDENT",
+    href: "/dashboard/student",
     scope: {
       create: ["ADMIN"],
       read: ["ADMIN", "TEACHER", "STUDENT"],
