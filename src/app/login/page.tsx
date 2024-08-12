@@ -1,22 +1,27 @@
 'use client';
 
+import { useLogin } from "@/hooks/useAuth";
 import { Button, Form, Input } from "antd";
 import Link from 'next/link';
+import { useRouter } from "next/navigation";
 
 type FieldType = {
-  username?: string;
-  password?: string;
+  username: string;
+  password: string;
   remember?: string;
 };
 
 const LoginPage = () => {
-  const onFinish = (values: FieldType) => {
-    console.log('Success:', values);
+  const { login, isMutating: loading, error } = useLogin();
+
+  const router = useRouter();
+
+  const onFinish = async (values: FieldType) => {
+    const { username, password } = values;
+    await login({ username, password });
+    router.push('/dashboard');
   };
-  
-  const onFinishFailed = (errorInfo: any) => {
-    console.log('Failed:', errorInfo);
-  };
+
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-primary-light to-primary-dark">
@@ -27,7 +32,6 @@ const LoginPage = () => {
           layout="vertical"
           initialValues={{ remember: true }}
           onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
           autoComplete="off"
         >
           <Form.Item
@@ -47,11 +51,14 @@ const LoginPage = () => {
           </Form.Item>
 
           <Form.Item>
-            <Button type="primary" htmlType="submit" className="w-full">
+            <Button type="primary" htmlType="submit" className="w-full" loading={loading}>
               Login
             </Button>
           </Form.Item>
         </Form>
+        {
+          error && <p className="text-red-500 text-center">{error.message}</p>
+        }
         <p className="text-center">
           Tidak punya akun? <Link href="/register" className="text-blue-500">Register</Link>
         </p>

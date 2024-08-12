@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { RootStyleRegistry } from "@/components/RootStyleRegistry";
+import SwrProvider from "./swrProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,7 +20,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={ inter.className }>
         <main className="flex min-h-screen flex-col">
-          <RootStyleRegistry>{children}</RootStyleRegistry>
+          <SwrProvider>
+            <RootStyleRegistry>{children}</RootStyleRegistry>
+          </SwrProvider>
         </main>
       </body>
     </html>
