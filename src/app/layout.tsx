@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { RootStyleRegistry } from "@/components/RootStyleRegistry";
 import SwrProvider from "./swrProvider";
+import ContextProvider from "@/context/ContextProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,7 +22,11 @@ export default function RootLayout({
       <body className={ inter.className }>
         <main className="flex min-h-screen flex-col">
           <SwrProvider>
-            <RootStyleRegistry>{children}</RootStyleRegistry>
+            <RootStyleRegistry>
+              <ContextProvider>
+                {children}
+              </ContextProvider>
+            </RootStyleRegistry>
           </SwrProvider>
         </main>
       </body>

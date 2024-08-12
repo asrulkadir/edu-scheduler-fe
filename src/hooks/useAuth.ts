@@ -24,9 +24,6 @@ async function logoutRequest(url: string) {
 export function useLogin() {
   const { trigger: login, isMutating, error, data } = useSWRMutation(`/api/auth/login`, loginRequest);
 
-  console.log('error', error);
-  console.log('data', data);
-
   return {
     login,
     isMutating,

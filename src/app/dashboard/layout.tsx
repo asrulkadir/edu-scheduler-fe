@@ -4,23 +4,17 @@ import { usePathname, useRouter } from 'next/navigation';
 import { routes } from '@/libs/routes';
 import { Button, Layout } from 'antd';
 import { useLogout } from '@/hooks/useAuth';
-import { useCurrentUser } from '@/hooks/useUser';
 
 const { Header, Sider, Content } = Layout;
 
-export default function DashboardLayout({
+function DashboardLayout({
   children, // will be a page or nested layout
 }: {
-  children: React.ReactNode
+  readonly children: React.ReactNode
 }) {
-  // const session = verifySession();
-  // console.log('login session', session);
   const pathname = usePathname();
   const { logout } = useLogout();
-  const { currentUser } = useCurrentUser();
   const router = useRouter();
-
-  console.log('current user', currentUser);
 
   const onLogout = async () => {
     await logout();
@@ -57,3 +51,5 @@ export default function DashboardLayout({
     </Layout>
   );
 }
+
+export default DashboardLayout;
