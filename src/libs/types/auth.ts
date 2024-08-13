@@ -1,4 +1,4 @@
-export type LoginRequest = {
+export type TLoginRequest = {
   username: string;
   password: string;
 };

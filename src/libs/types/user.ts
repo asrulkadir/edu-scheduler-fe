@@ -37,4 +37,5 @@ export type TRegisterUserRequest = {
   password: string;
   username: string;
   clientName: string;
+  confirmPassword?: string;
 };

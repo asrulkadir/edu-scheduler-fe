@@ -2,7 +2,11 @@
 
 import Link from "next/link";
 
-const Header = () => {
+interface HeaderProps {
+  showLogin?: boolean;
+}
+
+const Header = ({ showLogin = true }: HeaderProps) => {
   return (
     <header
       className="sticky top-0 left-0 w-full h-16 bg-white shadow-md flex items-center justify-between px-4"
@@ -10,7 +14,7 @@ const Header = () => {
       <h1 
         className="text-xl font-bold text-primary-dark"
       >
-        School Scheculer
+        <Link href="/">School Scheculer</Link>      
       </h1>
       <div
         className="flex items-center gap-20"
@@ -25,11 +29,13 @@ const Header = () => {
             <Link href="/about">About</Link>
           </h1>
         </div>
-        <div>
-          <h1 className="text-primary-dark hover:text-secondary">
-            <Link href="/login">Login</Link>
-          </h1>
-        </div>
+        {showLogin && (
+          <div>
+            <h1 className="text-primary-dark hover:text-secondary">
+              <Link href="/login">Login</Link>
+            </h1>
+          </div>
+        )}
       </div>
     </header>
   );

@@ -41,7 +41,7 @@ export const useDeleteUser = () => {
 };
 
 export const useRegisterUser = () => {
-  const { trigger: registerUser, error, data } = useSWRMutation(`/api/users/register`, registerUserRequest);
+  const { trigger: registerUser, error, data, isMutating: loadingRegisterUser } = useSWRMutation(`/api/users/register`, registerUserRequest);
 
-  return { registerUser, error, data };
+  return { registerUser, error, data, loadingRegisterUser };
 };

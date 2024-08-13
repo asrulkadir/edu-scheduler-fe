@@ -1,21 +1,27 @@
 'use client';
 
 import { useState } from 'react';
-import { Form, Input, Button, Select } from 'antd';
+import { Form, Input, Button, message } from 'antd';
 import Link from 'next/link';
-
-const { Option } = Select;
+import { TRegisterUserRequest } from '@/libs/types/user';
+import Header from '@/components/Header';
+import { useRegisterUser } from '@/hooks/useUser';
+import { useRouter } from 'next/navigation';
 
 const RegisterPage = () => {
   const [form] = Form.useForm();
+  const { registerUser, loadingRegisterUser } = useRegisterUser();
+  const router = useRouter();
 
-  const handleRegister = (values: unknown) => {
-    console.log('Success:', values);
-    // Tambahkan logika register Anda di sini
-  };
-
-  const handleRegisterFailed = (errorInfo: unknown) => {
-    console.log('Failed:', errorInfo);
+  const handleRegister = (values: TRegisterUserRequest) => {
+    registerUser(values, {
+      onSuccess: () => {
+        router.push('/login');
+      },
+      onError: (error) => {
+        message.error(error.message);
+      }
+    });
   };
 
   const [showPassword, setShowPassword] = useState(false);
@@ -30,106 +36,104 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-primary-light to-primary-dark p-8">
-      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded shadow-md">
-        <h1 className="text-2xl font-bold text-center">Register Page</h1>
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={handleRegister}
-          onFinishFailed={handleRegisterFailed}
-        >
-          <Form.Item
-            label="Nama Lembaga"
-            name="institutionName"
-            rules={[{ required: true, message: 'Please input your institution name!' }]}
+    <>
+      <Header />
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-primary-light to-primary-dark p-8">
+        <div className="w-full max-w-md p-8 space-y-6 bg-white rounded shadow-md">
+          <h1 className="text-2xl font-bold text-center">Register Page</h1>
+          <Form
+            form={form}
+            layout="vertical"
+            onFinish={handleRegister}
           >
-            <Input />
-          </Form.Item>
+            <Form.Item<TRegisterUserRequest>
+              label="Nama Lembaga"
+              name="clientName"
+              rules={[{ required: true, message: 'Please input your institution name!' }]}
+            >
+              <Input
+                placeholder='Masukkan Nama Lembaga'
+              />
+            </Form.Item>
 
-          <Form.Item
-            label="Nama"
-            name="name"
-            rules={[{ required: true, message: 'Please input your name!' }]}
-          >
-            <Input />
-          </Form.Item>
+            <Form.Item<TRegisterUserRequest>
+              label="Nama"
+              name="name"
+              rules={[{ required: true, message: 'Please input your name!' }]}
+            >
+              <Input
+                placeholder='Masukkan Nama'
+              />
+            </Form.Item>
 
-          <Form.Item
-            label="Role"
-            name="role"
-            rules={[{ required: true, message: 'Please select your role!' }]}
-          >
-            <Select placeholder="Select your role">
-              <Option value="admin">Admin</Option>
-              <Option value="guru">Guru</Option>
-              <Option value="siswa">Siswa</Option>
-            </Select>
-          </Form.Item>
+            <Form.Item<TRegisterUserRequest>
+              label="Username"
+              name="username"
+              rules={[{ required: true, message: 'Please input your username!' }]}
+            >
+              <Input
+                placeholder='Masukkan Username'
+              />
+            </Form.Item>
 
-          <Form.Item
-            label="Username"
-            name="username"
-            rules={[{ required: true, message: 'Please input your username!' }]}
-          >
-            <Input />
-          </Form.Item>
+            <Form.Item<TRegisterUserRequest>
+              label="Email"
+              name="email"
+              rules={[{ required: true, message: 'Please input your email!', type: 'email' }]}
+            >
+              <Input
+                placeholder='Masukkan Email'
+              />
+            </Form.Item>
 
-          <Form.Item
-            label="Email"
-            name="email"
-            rules={[{ required: true, message: 'Please input your email!', type: 'email' }]}
-          >
-            <Input />
-          </Form.Item>
+            <Form.Item<TRegisterUserRequest>
+              label="Password"
+              name="password"
+              rules={[{ required: true, message: 'Please input your password!' }]}
+            >
+              <Input.Password
+                type={showPassword ? "text" : "password"}
+                placeholder="Masukkan Password"
+                onClick={toggleShowPassword}
+              />
+            </Form.Item>
 
-          <Form.Item
-            label="Password"
-            name="password"
-            rules={[{ required: true, message: 'Please input your password!' }]}
-          >
-            <Input.Password
-              type={showPassword ? "text" : "password"}
-              placeholder="Masukkan Password"
-              onClick={toggleShowPassword}
-            />
-          </Form.Item>
+            <Form.Item<TRegisterUserRequest>
+              label="Konfirmasi Password"
+              name="confirmPassword"
+              dependencies={['password']}
+              hasFeedback
+              rules={[
+                { required: true, message: 'Please confirm your password!' },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (!value || getFieldValue('password') === value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error('The two passwords that you entered do not match!'));
+                  },
+                }),
+              ]}
+            >
+              <Input.Password
+                type={showConfirmPassword ? "text" : "password"}
+                placeholder="Konfirmasi Password"
+                onClick={toggleShowConfirmPassword}
+              />
+            </Form.Item>
 
-          <Form.Item
-            label="Konfirmasi Password"
-            name="confirmPassword"
-            dependencies={['password']}
-            hasFeedback
-            rules={[
-              { required: true, message: 'Please confirm your password!' },
-              ({ getFieldValue }) => ({
-                validator(_, value) {
-                  if (!value || getFieldValue('password') === value) {
-                    return Promise.resolve();
-                  }
-                  return Promise.reject(new Error('The two passwords that you entered do not match!'));
-                },
-              }),
-            ]}
-          >
-            <Input.Password
-              type={showConfirmPassword ? "text" : "password"}
-              placeholder="Konfirmasi Password"
-              onClick={toggleShowConfirmPassword}
-            />
-          </Form.Item>
-
-          <Form.Item>
-            <Button type="primary" htmlType="submit" className="w-full">
-              Register
-            </Button>
-          </Form.Item>
-        </Form>
-        <p className="text-center">
-          Sudah punya akun? <Link href="/login" className="text-blue-500">Login</Link>
-        </p>
+            <Form.Item>
+              <Button type="primary" htmlType="submit" className="w-full" loading={loadingRegisterUser}>
+                Register
+              </Button>
+            </Form.Item>
+          </Form>
+          <p className="text-center">
+            Sudah punya akun? <Link href="/login" className="text-blue-500">Login</Link>
+          </p>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
