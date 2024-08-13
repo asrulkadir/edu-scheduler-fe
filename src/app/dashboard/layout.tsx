@@ -1,9 +1,9 @@
 'use client';
 import NavComp from '@/components/Navigation';
 import { usePathname, useRouter } from 'next/navigation';
-import { routes } from '@/libs/routes';
 import { Button, Layout } from 'antd';
 import { useLogout } from '@/hooks/useAuth';
+import { routes } from '@/libs/utils/routes';
 
 const { Header, Sider, Content } = Layout;
 
@@ -30,7 +30,7 @@ function DashboardLayout({
       </Sider>
       <Layout>
         <Header
-          className='sticky top-0 left-0 w-full h-16 bg-secondary shadow-md flex items-center justify-between'
+          className='sticky top-0 left-0 w-full h-16 bg-secondary shadow-md flex items-center justify-between z-[99]'
         >
           <h1 className='text-xl font-bold'>
             {
@@ -43,7 +43,7 @@ function DashboardLayout({
           </Button>
         </Header>
         <Content
-          className='flex min-h-screen flex-col p-4 bg-gray-100'
+          className='flex min-h-screen flex-col p-8 bg-white'
         >
           { children }
         </Content>

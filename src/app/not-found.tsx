@@ -1,7 +1,7 @@
 'use client';
 
 import { useLogout } from '@/hooks/useAuth';
-import { getCookie } from '@/libs/cookies';
+import { getCookie } from '@/libs/utils/cookies';
 import { Button } from 'antd';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';

@@ -9,12 +9,12 @@ const { Option } = Select;
 const RegisterPage = () => {
   const [form] = Form.useForm();
 
-  const handleRegister = (values: any) => {
+  const handleRegister = (values: unknown) => {
     console.log('Success:', values);
     // Tambahkan logika register Anda di sini
   };
 
-  const handleRegisterFailed = (errorInfo: any) => {
+  const handleRegisterFailed = (errorInfo: unknown) => {
     console.log('Failed:', errorInfo);
   };
 

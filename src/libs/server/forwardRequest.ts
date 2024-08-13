@@ -5,7 +5,7 @@ export async function forwardRequestToBackend(
   request: NextRequest,
   backendUrl: string,
   customHeaders?: Record<string, string>,
-  customBody?: any
+  customBody?: unknown
 ): Promise<NextResponse> {
   try {
     // Tentukan apakah metode HTTP memerlukan body
@@ -32,7 +32,7 @@ export async function forwardRequestToBackend(
       status: res.status,
       headers: headers,
     });
-  } catch (error) {
+  } catch {
     return new NextResponse(JSON.stringify({ message: 'Internal Server Error' }), { status: 500 });
   }
 }

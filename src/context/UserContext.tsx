@@ -1,7 +1,8 @@
 'use client';
 
 import { useCurrentUser } from '@/hooks/useUser';
-import { TUser } from '@/types/user';
+import { TUser } from '@/libs/types/user';
+import { ERole } from '@/libs/utils/enum';
 import React, { createContext, useMemo } from 'react';
 
 const defaultUser: TUser = {
@@ -9,7 +10,7 @@ const defaultUser: TUser = {
   username: '',
   email: '',
   name: '',
-  role: '',
+  role: ERole.NONE,
   clientId: ''
 };
 

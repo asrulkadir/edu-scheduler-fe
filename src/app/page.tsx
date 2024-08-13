@@ -2,8 +2,9 @@
 
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { Button, Layout } from "antd";
+import { Layout } from "antd";
 import { useRouter } from "next/navigation";
+import ButtonComp from "@/components/Button";
 
 const { Content } = Layout;
 
@@ -25,9 +26,7 @@ export default function Home() {
             School Scheduler adalah aplikasi web yang dirancang untuk membantu sekolah mengelola dan mengatur jadwal pengajaran yang lebih
             efisien. Buat, kelola, dan bagikan jadwal dengan mudah kepada guru dan siswa. Jadikan proses penjadwalan lebih mudah dan komunikasi lebih baik di lembaga pendidikan Anda.
           </p>
-          <Button type="primary" size="large" onClick={handleGetStarted} className="bg-primary-light hover:bg-secondary-light">
-            Coba Sekarang
-          </Button>
+          <ButtonComp onClick={handleGetStarted} title="Coba Sekarang" />
         </div>
       </Content>
       <Footer />

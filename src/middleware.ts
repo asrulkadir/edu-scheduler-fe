@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import { routes } from './libs/routes';
+import { routes } from './libs/utils/routes';
 
 const protectedRoutes = ['/dashboard', '/dashboard/*'];
 

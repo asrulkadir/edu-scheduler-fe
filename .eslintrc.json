@@ -1,8 +1,15 @@
 {
-  "extends": "next/core-web-vitals",
+  "extends": [
+    "next/core-web-vitals",
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:react/jsx-runtime",
+    "prettier"
+  ],
   "rules": {
     "no-console": "warn",
-    "no-unused-vars": ["error", { "args": "none" }],
     "indent": ["error", 2],
     "semi": ["error", "always"],
     "react/jsx-tag-spacing": ["error", {
@@ -28,7 +35,7 @@
         "prop": "parens-new-line"
       }
     ],
-    "@typescript-eslint/explicit-function-return-type": "off"
-    
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "react/prop-types": "off"
   }
 }
