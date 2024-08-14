@@ -5,14 +5,7 @@ type TModalProps = ModalProps & {
 };
 
 const ModalComp: React.FC<TModalProps> = ({ children, ...props }) => {
-
-  return (
-    <Modal
-      {...props}
-    >
-      {children}
-    </Modal>
-  );
+  return <Modal {...props}>{children}</Modal>;
 };
 
 export default ModalComp;

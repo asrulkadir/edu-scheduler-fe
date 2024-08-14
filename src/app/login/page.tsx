@@ -1,10 +1,10 @@
 'use client';
 
-import Header from "@/components/Header";
-import { useLogin } from "@/hooks/useAuth";
-import { Button, Form, Input, message } from "antd";
+import Header from '@/components/Header';
+import { useLogin } from '@/hooks/useAuth';
+import { Button, Form, Input, message } from 'antd';
 import Link from 'next/link';
-import { useRouter } from "next/navigation";
+import { useRouter } from 'next/navigation';
 
 type FieldType = {
   username: string;
@@ -18,15 +18,18 @@ const LoginPage = () => {
 
   const onFinish = (values: FieldType) => {
     const { username, password } = values;
-    login({ username, password }, {
-      onSuccess: () => {
-        router.push('/dashboard');
+    login(
+      { username, password },
+      {
+        onSuccess: () => {
+          router.push('/dashboard');
+        },
+        onError: (error) => {
+          message.error(error.message);
+        },
       },
-      onError: (error) => {
-        message.error(error.message);
-      }});
+    );
   };
-
 
   return (
     <>
@@ -44,34 +47,40 @@ const LoginPage = () => {
             <Form.Item
               label="Username"
               name="username"
-              rules={[{ required: true, message: 'Please input your username!' }]}
+              rules={[
+                { required: true, message: 'Please input your username!' },
+              ]}
             >
-              <Input
-                placeholder="Masukkan username"
-              />
+              <Input placeholder="Masukkan username" />
             </Form.Item>
 
             <Form.Item
               label="Password"
               name="password"
-              rules={[{ required: true, message: 'Please input your password!' }]}
+              rules={[
+                { required: true, message: 'Please input your password!' },
+              ]}
             >
-              <Input.Password
-                placeholder="Masukkan password"
-              />
+              <Input.Password placeholder="Masukkan password" />
             </Form.Item>
 
             <Form.Item>
-              <Button type="primary" htmlType="submit" className="w-full" loading={loading}>
+              <Button
+                type="primary"
+                htmlType="submit"
+                className="w-full"
+                loading={loading}
+              >
                 Login
               </Button>
             </Form.Item>
           </Form>
-          {
-            error && <p className="text-red-500 text-center">{error.message}</p>
-          }
+          {error && <p className="text-red-500 text-center">{error.message}</p>}
           <p className="text-center">
-            Tidak punya akun? <Link href="/register" className="text-blue-500">Register</Link>
+            Tidak punya akun?{' '}
+            <Link href="/register" className="text-blue-500">
+              Register
+            </Link>
           </p>
         </div>
       </div>

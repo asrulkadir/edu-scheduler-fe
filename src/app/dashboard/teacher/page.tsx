@@ -1,9 +1,7 @@
 'use client';
 
 const Page = () => {
-  return (
-    <div>Halaman Guru</div>
-  );
+  return <div>Halaman Guru</div>;
 };
 
 export default Page;

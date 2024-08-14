@@ -1,9 +1,16 @@
-import { loginRequest, logoutRequest } from '@/libs/client/services/authRequests';
+import {
+  loginRequest,
+  logoutRequest,
+} from '@/libs/client/services/authRequests';
 import useSWRMutation from 'swr/mutation';
 
-
 export function useLogin() {
-  const { trigger: login, isMutating, error, data } = useSWRMutation(`/api/auth/login`, loginRequest);
+  const {
+    trigger: login,
+    isMutating,
+    error,
+    data,
+  } = useSWRMutation(`/api/auth/login`, loginRequest);
 
   return {
     login,
@@ -14,7 +21,12 @@ export function useLogin() {
 }
 
 export function useLogout() {
-  const { trigger: logout, isMutating, error, data } = useSWRMutation(`/api/auth/logout`, logoutRequest);
+  const {
+    trigger: logout,
+    isMutating,
+    error,
+    data,
+  } = useSWRMutation(`/api/auth/logout`, logoutRequest);
 
   return {
     logout,

@@ -4,9 +4,14 @@ import React from 'react';
 interface TButtonProps extends ButtonProps {
   title: string;
   color?: 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'primary';
-};
+}
 
-const ButtonComp: React.FC<TButtonProps> = ({ title, className, color = 'primary', ...props }) => {
+const ButtonComp: React.FC<TButtonProps> = ({
+  title,
+  className,
+  color = 'primary',
+  ...props
+}) => {
   const colorVariants = {
     primary: 'bg-primary-dark hover:bg-primary-light',
     secondary: 'bg-secondary-dark hover:bg-secondary-light',
@@ -16,7 +21,7 @@ const ButtonComp: React.FC<TButtonProps> = ({ title, className, color = 'primary
     info: 'bg-info-dark hover:bg-info-light',
   };
   return (
-    <Button 
+    <Button
       size="large"
       className={`text-white ${colorVariants[color]} ${className}`}
       {...props}

@@ -7,13 +7,14 @@ const protectedRoutes = ['/dashboard', '/dashboard/*'];
 export default async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname;
   const isProtectedRoute = protectedRoutes.some((route) =>
-    path.startsWith(route)
+    path.startsWith(route),
   );
 
   const session = cookies().get('session');
   const role = cookies().get('role');
   const findPage = routes.find((route) => route.href === path);
-  const permissionAccessPage = role && findPage?.scope.read.includes(role.value);
+  const permissionAccessPage =
+    role && findPage?.scope.read.includes(role.value);
 
   if (isProtectedRoute && !session?.value) {
     return NextResponse.redirect(new URL('/login', req.nextUrl));

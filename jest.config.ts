@@ -17,9 +17,9 @@ const config: Config = {
 
   // An array of glob patterns indicating a set of files for which coverage information should be collected
   // collectCoverageFrom: undefined,
-  
+
   // The directory where Jest should output its coverage files
-  coverageDirectory: "coverage",
+  coverageDirectory: 'coverage',
 };
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async

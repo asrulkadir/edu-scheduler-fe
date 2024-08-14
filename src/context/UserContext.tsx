@@ -11,21 +11,21 @@ const defaultUser: TUser = {
   email: '',
   name: '',
   role: ERole.NONE,
-  clientId: ''
+  clientId: '',
 };
 
 export const UserContext = createContext<TUser>(defaultUser);
 
-const UserContextProvider = ({ children }: {
-  readonly children: React.ReactNode
+const UserContextProvider = ({
+  children,
+}: {
+  readonly children: React.ReactNode;
 }) => {
   const { currentUser } = useCurrentUser();
   const contextValue = useMemo(() => currentUser || defaultUser, [currentUser]);
 
   return (
-    <UserContext.Provider value={contextValue}>
-      {children}
-    </UserContext.Provider>
+    <UserContext.Provider value={contextValue}>{children}</UserContext.Provider>
   );
 };
 

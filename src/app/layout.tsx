@@ -1,15 +1,15 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-import { RootStyleRegistry } from "@/components/RootStyleRegistry";
-import SwrProvider from "./swrProvider";
-import ContextProvider from "@/context/ContextProvider";
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+import './globals.css';
+import { RootStyleRegistry } from '@/components/RootStyleRegistry';
+import SwrProvider from './swrProvider';
+import ContextProvider from '@/context/ContextProvider';
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: "Scheduling App",
-  description: "A scheduling app",
+  title: 'Scheduling App',
+  description: 'A scheduling app',
 };
 
 export default function RootLayout({
@@ -19,13 +19,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={ inter.className }>
+      <body className={inter.className}>
         <main className="flex min-h-screen flex-col">
           <SwrProvider>
             <RootStyleRegistry>
-              <ContextProvider>
-                {children}
-              </ContextProvider>
+              <ContextProvider>{children}</ContextProvider>
             </RootStyleRegistry>
           </SwrProvider>
         </main>

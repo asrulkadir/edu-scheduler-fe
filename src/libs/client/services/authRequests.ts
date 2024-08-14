@@ -1,7 +1,10 @@
-import { TLoginRequest } from "../../types/auth";
-import { makeRequest } from "../request";
+import { TLoginRequest } from '../../types/auth';
+import { makeRequest } from '../request';
 
-export async function loginRequest(url: string, { arg }: { arg: TLoginRequest }) {
+export async function loginRequest(
+  url: string,
+  { arg }: { arg: TLoginRequest },
+) {
   return makeRequest(url, 'POST', arg);
 }
 

@@ -1,11 +1,16 @@
-import { ERole } from "../utils/enum";
+import { ERole } from '../utils/enum';
 
 export type TUser = {
   id: string;
   username: string;
   email: string;
   name: string;
-  role: ERole.ADMIN | ERole.TEACHER | ERole.STUDENT | ERole.SUPERADMIN | ERole.NONE;
+  role:
+    | ERole.ADMIN
+    | ERole.TEACHER
+    | ERole.STUDENT
+    | ERole.SUPERADMIN
+    | ERole.NONE;
   clientId: string;
 };
 

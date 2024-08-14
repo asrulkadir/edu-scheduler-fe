@@ -1,6 +1,6 @@
 'use client';
 
-import dayjs from "dayjs";
+import dayjs from 'dayjs';
 
 const Footer = () => {
   return (

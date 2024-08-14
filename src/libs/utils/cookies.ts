@@ -6,7 +6,11 @@ export function getCookie(name: string): string | undefined {
 }
 
 // Set the value of a cookie
-export function setCookie(name: string, value: string, options?: Cookies.CookieAttributes): void {
+export function setCookie(
+  name: string,
+  value: string,
+  options?: Cookies.CookieAttributes,
+): void {
   Cookies.set(name, value, options);
 }
 

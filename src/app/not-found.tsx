@@ -29,11 +29,17 @@ export default function NotFound() {
       <p className="text-xl text-gray-600 mb-8">
         Oops! Halaman yang Anda cari tidak ditemukan.
       </p>
-      <Button onClick={onReturnHome} className="p-6 bg-primary-dark text-white rounded-md text-lg font-semibold hover:bg-primary transition">
+      <Button
+        onClick={onReturnHome}
+        className="p-6 bg-primary-dark text-white rounded-md text-lg font-semibold hover:bg-primary transition"
+      >
         Kembali ke Halaman Utama
       </Button>
       {role && (
-        <Button onClick={onBack} className="p-6 bg-primary-dark text-white rounded-md text-lg font-semibold hover:bg-primary transition mt-5">
+        <Button
+          onClick={onBack}
+          className="p-6 bg-primary-dark text-white rounded-md text-lg font-semibold hover:bg-primary transition mt-5"
+        >
           Kembali ke Dashboard
         </Button>
       )}

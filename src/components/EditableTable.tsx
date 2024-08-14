@@ -1,7 +1,7 @@
-import { ERole } from "@/libs/utils/enum";
-import { Form, Input, Popconfirm, Select, Table, Typography } from "antd";
+import { ERole } from '@/libs/utils/enum';
+import { Form, Input, Popconfirm, Select, Table, Typography } from 'antd';
 import type { TableColumnProps, TableProps } from 'antd';
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
 interface EditableCellProps<T> extends React.HTMLAttributes<HTMLElement> {
   editing: boolean;
@@ -20,15 +20,18 @@ const EditableCell = <T extends object>({
   children,
   ...restProps
 }: EditableCellProps<T>) => {
-  const inputNode = inputType === 'select' ? (
-    <Select
-      options={[
-        { value: ERole.ADMIN, label: ERole.ADMIN },
-        { value: ERole.TEACHER, label: ERole.TEACHER },
-        { value: ERole.STUDENT, label: ERole.STUDENT },
-      ]}
-    />
-  ) : <Input />;
+  const inputNode =
+    inputType === 'select' ? (
+      <Select
+        options={[
+          { value: ERole.ADMIN, label: ERole.ADMIN },
+          { value: ERole.TEACHER, label: ERole.TEACHER },
+          { value: ERole.STUDENT, label: ERole.STUDENT },
+        ]}
+      />
+    ) : (
+      <Input />
+    );
 
   return (
     <td {...restProps}>
@@ -121,43 +124,72 @@ const EditableTable = <T extends { id: React.Key }>({
         }}
         bordered
         dataSource={data}
-        columns={[
-          ...mergedColumns,
-          ...(editable || deletable
-            ? [{
-              title: 'Aksi',
-              dataIndex: 'id',
-              render: (_: unknown, record: T) => {
-                const isEditable = isEditing(record);
-                return isEditable ? (
-                  <span>
-                    <Typography.Link onClick={() => save(record.id)} style={{ marginRight: 8 }}>
-                      Simpan
-                    </Typography.Link>
-                    <Popconfirm title="Yakin ingin batal?" onConfirm={cancel} okText="Ya" cancelText="Tidak">
-                      <Typography.Link className="text-danger hover:text-danger-light">Batal</Typography.Link>
-                    </Popconfirm>
-                  </span>
-                ) : (
-                  <div className="flex gap-5">
-                    {editable && (
-                      <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
-                        Edit
-                      </Typography.Link>
-                    )}
-                    {deletable && (
-                      <Popconfirm title="Yakin ingin hapus?" onConfirm={() => onDelete(record.id)} okText="Ya" cancelText="Tidak">
-                        <Typography.Link disabled={editingKey !== ''} className={editingKey !== '' ? "" : "text-danger hover:text-danger-light"}>
-                          Hapus
-                        </Typography.Link>
-                      </Popconfirm>
-                    )}
-                  </div>
-                );
-              },
-            }]
-            : []),
-        ] as Array<TableColumnProps<T> & { editable?: boolean }>}
+        columns={
+          [
+            ...mergedColumns,
+            ...(editable || deletable
+              ? [
+                  {
+                    title: 'Aksi',
+                    dataIndex: 'id',
+                    render: (_: unknown, record: T) => {
+                      const isEditable = isEditing(record);
+                      return isEditable ? (
+                        <span>
+                          <Typography.Link
+                            onClick={() => save(record.id)}
+                            style={{ marginRight: 8 }}
+                          >
+                            Simpan
+                          </Typography.Link>
+                          <Popconfirm
+                            title="Yakin ingin batal?"
+                            onConfirm={cancel}
+                            okText="Ya"
+                            cancelText="Tidak"
+                          >
+                            <Typography.Link className="text-danger hover:text-danger-light">
+                              Batal
+                            </Typography.Link>
+                          </Popconfirm>
+                        </span>
+                      ) : (
+                        <div className="flex gap-5">
+                          {editable && (
+                            <Typography.Link
+                              disabled={editingKey !== ''}
+                              onClick={() => edit(record)}
+                            >
+                              Edit
+                            </Typography.Link>
+                          )}
+                          {deletable && (
+                            <Popconfirm
+                              title="Yakin ingin hapus?"
+                              onConfirm={() => onDelete(record.id)}
+                              okText="Ya"
+                              cancelText="Tidak"
+                            >
+                              <Typography.Link
+                                disabled={editingKey !== ''}
+                                className={
+                                  editingKey !== ''
+                                    ? ''
+                                    : 'text-danger hover:text-danger-light'
+                                }
+                              >
+                                Hapus
+                              </Typography.Link>
+                            </Popconfirm>
+                          )}
+                        </div>
+                      );
+                    },
+                  },
+                ]
+              : []),
+          ] as Array<TableColumnProps<T> & { editable?: boolean }>
+        }
         rowClassName="editable-row"
         pagination={{
           onChange: cancel,

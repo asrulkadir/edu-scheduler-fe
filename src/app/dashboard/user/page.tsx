@@ -1,21 +1,26 @@
 'use client';
 
-import ButtonComp from "@/components/Button";
-import { useCreateUser, useDeleteUser, useUpdateUser, useUsers } from "@/hooks/useUser";
-import { TCreateUserRequest, TUser } from "@/libs/types/user";
-import { PlusOutlined } from "@ant-design/icons";
-import { useContext, useEffect, useState } from "react";
-import { UserContext } from "@/context/UserContext";
-import { ERole } from "@/libs/utils/enum";
-import EditableTable from "@/components/EditableTable";
-import { Form, Input, message, Modal, Select, TableColumnProps } from "antd";
+import ButtonComp from '@/components/Button';
+import {
+  useCreateUser,
+  useDeleteUser,
+  useUpdateUser,
+  useUsers,
+} from '@/hooks/useUser';
+import { TCreateUserRequest, TUser } from '@/libs/types/user';
+import { PlusOutlined } from '@ant-design/icons';
+import { useContext, useEffect, useState } from 'react';
+import { UserContext } from '@/context/UserContext';
+import { ERole } from '@/libs/utils/enum';
+import EditableTable from '@/components/EditableTable';
+import { Form, Input, message, Modal, Select, TableColumnProps } from 'antd';
 
 const Page = () => {
   const user = useContext(UserContext);
   const { users, loadingUsers, mutate } = useUsers();
   const { updateUser, loadingUpdateUser } = useUpdateUser();
-  const {deleteUser, loadingDeleteUser} = useDeleteUser();
-  const {createUser, loadingCreateUser} = useCreateUser();
+  const { deleteUser, loadingDeleteUser } = useDeleteUser();
+  const { createUser, loadingCreateUser } = useCreateUser();
   const [open, setOpen] = useState(false);
   const [form] = Form.useForm();
 
@@ -37,33 +42,40 @@ const Page = () => {
     // Get the difference between the new data and the previous data
     const diff = Object.fromEntries(
       Object.entries(newData).filter(
-        ([key, value]) => previousData && value !== previousData[key as keyof TUser]
-      )
+        ([key, value]) =>
+          previousData && value !== previousData[key as keyof TUser],
+      ),
     );
-    
-    await updateUser({ id: key.toString(), ...diff }, {
-      onError: (error) => {
-        message.error(error.message);
+
+    await updateUser(
+      { id: key.toString(), ...diff },
+      {
+        onError: (error) => {
+          message.error(error.message);
+        },
+        onSuccess(data) {
+          message.success(data.message);
+          mutate();
+        },
       },
-      onSuccess(data) {
-        message.success(data.message);
-        mutate();
-      },
-    });
+    );
   };
 
   const handleDelete = (key: React.Key) => {
-    deleteUser({ id: key.toString() }, {
-      onError: (error) => {
-        message.error(error.message);
+    deleteUser(
+      { id: key.toString() },
+      {
+        onError: (error) => {
+          message.error(error.message);
+        },
+        onSuccess(data) {
+          message.success(data.message);
+          mutate();
+        },
       },
-      onSuccess(data) {
-        message.success(data.message);
-        mutate();
-      },
-    });
+    );
   };
-  
+
   const columns: (TableColumnProps<TUser> & { editable?: boolean })[] = [
     {
       title: 'Username',
@@ -95,7 +107,6 @@ const Page = () => {
     setOpen(true);
   };
 
-
   const handleOk = () => {
     form.submit();
   };
@@ -117,15 +128,11 @@ const Page = () => {
       },
     });
   };
-  
+
   return (
     <>
       <div>
-        <h1
-          className="mb-4 text-2xl font-bold"
-        >
-          Daftar User
-        </h1>
+        <h1 className="mb-4 text-2xl font-bold">Daftar User</h1>
         <ButtonComp
           title="Tambah User"
           className="mb-4"
@@ -149,10 +156,10 @@ const Page = () => {
         confirmLoading={loadingCreateUser}
         onCancel={handleCancel}
         footer={[
-          <ButtonComp 
-            key="back" 
-            onClick={handleCancel} 
-            title="Batal" 
+          <ButtonComp
+            key="back"
+            onClick={handleCancel}
+            title="Batal"
             color="danger"
           />,
           <ButtonComp
@@ -160,7 +167,7 @@ const Page = () => {
             loading={loadingCreateUser}
             onClick={handleOk}
             title="Tambah"
-          />
+          />,
         ]}
       >
         <Form
@@ -174,9 +181,7 @@ const Page = () => {
             name="name"
             rules={[{ required: true, message: 'Harap masukkan nama anda!' }]}
           >
-            <Input
-              placeholder="Masukkan nama"
-            />
+            <Input placeholder="Masukkan nama" />
           </Form.Item>
 
           <Form.Item<TCreateUserRequest>
@@ -184,23 +189,21 @@ const Page = () => {
             name="username"
             rules={[{ required: true, message: 'Harap masukkan username!' }]}
           >
-            <Input
-              placeholder="Masukkan username"
-            />
+            <Input placeholder="Masukkan username" />
           </Form.Item>
 
           <Form.Item<TCreateUserRequest>
             label="Email"
             name="email"
-            rules={[{ 
-              required: true, 
-              message: 'Email tidak sesuai!',
-              type: 'email', 
-            }]}
+            rules={[
+              {
+                required: true,
+                message: 'Email tidak sesuai!',
+                type: 'email',
+              },
+            ]}
           >
-            <Input
-              placeholder="Masukkan email"
-            />
+            <Input placeholder="Masukkan email" />
           </Form.Item>
 
           <Form.Item<TCreateUserRequest>
@@ -223,30 +226,25 @@ const Page = () => {
             name="password"
             rules={[{ required: true, message: 'Harap massukkan password!' }]}
           >
-            <Input.Password
-              placeholder="Masukkan password"
-            />
+            <Input.Password placeholder="Masukkan password" />
           </Form.Item>
 
           <Form.Item<TCreateUserRequest>
             label="Konfirmasi Password"
             name="confirmPassword"
-            rules={
-              [
-                { 
-                  required: true,
-                  validator: (_, value) => {
-                    if (!value || form.getFieldValue('password') === value) {
-                      return Promise.resolve();
-                    }
-                    return Promise.reject('Konfirmasi password tidak sesuai!');
+            rules={[
+              {
+                required: true,
+                validator: (_, value) => {
+                  if (!value || form.getFieldValue('password') === value) {
+                    return Promise.resolve();
                   }
-                }
-              ]}
+                  return Promise.reject('Konfirmasi password tidak sesuai!');
+                },
+              },
+            ]}
           >
-            <Input.Password
-              placeholder="Masukkan konfirmasi password"
-            />
+            <Input.Password placeholder="Masukkan konfirmasi password" />
           </Form.Item>
         </Form>
       </Modal>

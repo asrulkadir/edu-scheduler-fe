@@ -1,18 +1,18 @@
 // lib/apiProxy.ts
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function forwardRequestToBackend(
   request: NextRequest,
   backendUrl: string,
   customHeaders?: Record<string, string>,
-  customBody?: unknown
+  customBody?: unknown,
 ): Promise<NextResponse> {
   try {
     // Tentukan apakah metode HTTP memerlukan body
     const hasBody = ['POST', 'PUT', 'PATCH'].includes(request.method || '');
 
     // Hanya parsing body jika metode HTTP memerlukan body
-    const body = hasBody ? (customBody || await request.json()) : undefined;
+    const body = hasBody ? customBody || (await request.json()) : undefined;
 
     const res = await fetch(backendUrl, {
       method: request.method,
@@ -33,6 +33,9 @@ export async function forwardRequestToBackend(
       headers: headers,
     });
   } catch {
-    return new NextResponse(JSON.stringify({ message: 'Internal Server Error' }), { status: 500 });
+    return new NextResponse(
+      JSON.stringify({ message: 'Internal Server Error' }),
+      { status: 500 },
+    );
   }
 }

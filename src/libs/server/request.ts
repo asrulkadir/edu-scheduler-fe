@@ -1,6 +1,6 @@
-import { cookies } from "next/headers";
-import { forwardRequestToBackend } from "./forwardRequest";
-import { NextRequest } from "next/server";
+import { cookies } from 'next/headers';
+import { forwardRequestToBackend } from './forwardRequest';
+import { NextRequest } from 'next/server';
 
 export function getAuthorizationHeader() {
   const sessionCookie = cookies().get('session');
@@ -15,6 +15,6 @@ export async function handleRequest(request: NextRequest, path: string) {
   const authorization = getAuthorizationHeader();
   const backendUrl = getBackendUrl(path);
   return forwardRequestToBackend(request, backendUrl, {
-    'Authorization': authorization,
+    Authorization: authorization,
   });
 }

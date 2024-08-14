@@ -1,10 +1,10 @@
 'use client';
 
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import { Layout } from "antd";
-import { useRouter } from "next/navigation";
-import ButtonComp from "@/components/Button";
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import { Layout } from 'antd';
+import { useRouter } from 'next/navigation';
+import ButtonComp from '@/components/Button';
 
 const { Content } = Layout;
 
@@ -23,8 +23,11 @@ export default function Home() {
             Selamat Datang di School Scheduler
           </h1>
           <p className="text-gray-700 text-lg">
-            School Scheduler adalah aplikasi web yang dirancang untuk membantu sekolah mengelola dan mengatur jadwal pengajaran yang lebih
-            efisien. Buat, kelola, dan bagikan jadwal dengan mudah kepada guru dan siswa. Jadikan proses penjadwalan lebih mudah dan komunikasi lebih baik di lembaga pendidikan Anda.
+            School Scheduler adalah aplikasi web yang dirancang untuk membantu
+            sekolah mengelola dan mengatur jadwal pengajaran yang lebih efisien.
+            Buat, kelola, dan bagikan jadwal dengan mudah kepada guru dan siswa.
+            Jadikan proses penjadwalan lebih mudah dan komunikasi lebih baik di
+            lembaga pendidikan Anda.
           </p>
           <ButtonComp onClick={handleGetStarted} title="Coba Sekarang" />
         </div>

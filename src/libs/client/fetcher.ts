@@ -6,7 +6,12 @@ type FetchOptions = {
 };
 
 export async function fetcher(url: string, options: FetchOptions = {}) {
-  const { method = 'GET', headers = {}, body, credentials = 'include' } = options;
+  const {
+    method = 'GET',
+    headers = {},
+    body,
+    credentials = 'include',
+  } = options;
 
   const response = await fetch(url, {
     method,
