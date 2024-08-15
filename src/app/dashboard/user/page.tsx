@@ -1,6 +1,5 @@
 'use client';
 
-import ButtonComp from '@/components/Button';
 import {
   useCreateUser,
   useDeleteUser,
@@ -13,7 +12,15 @@ import { useContext, useEffect, useState } from 'react';
 import { UserContext } from '@/context/UserContext';
 import { ERole } from '@/libs/utils/enum';
 import EditableTable from '@/components/EditableTable';
-import { Form, Input, message, Modal, Select, TableColumnProps } from 'antd';
+import {
+  Button,
+  Form,
+  Input,
+  message,
+  Modal,
+  Select,
+  TableColumnProps,
+} from 'antd';
 
 const Page = () => {
   const user = useContext(UserContext);
@@ -133,12 +140,14 @@ const Page = () => {
     <>
       <div>
         <h1 className="mb-4 text-2xl font-bold">Daftar User</h1>
-        <ButtonComp
-          title="Tambah User"
+        <Button
           className="mb-4"
           icon={<PlusOutlined />}
           onClick={showModal}
-        />
+          type="primary"
+        >
+          Tambah User
+        </Button>
         <EditableTable<TUser>
           data={data}
           columns={columns}
@@ -156,18 +165,17 @@ const Page = () => {
         confirmLoading={loadingCreateUser}
         onCancel={handleCancel}
         footer={[
-          <ButtonComp
-            key="back"
-            onClick={handleCancel}
-            title="Batal"
-            color="danger"
-          />,
-          <ButtonComp
+          <Button key="back" onClick={handleCancel} type="primary" danger>
+            Batal
+          </Button>,
+          <Button
             key="submit"
             loading={loadingCreateUser}
             onClick={handleOk}
-            title="Tambah"
-          />,
+            type="primary"
+          >
+            Tambah
+          </Button>,
         ]}
       >
         <Form

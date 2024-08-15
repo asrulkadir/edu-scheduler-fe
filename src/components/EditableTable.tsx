@@ -148,7 +148,7 @@ const EditableTable = <T extends { id: React.Key }>({
                             okText="Ya"
                             cancelText="Tidak"
                           >
-                            <Typography.Link className="text-danger hover:text-danger-light">
+                            <Typography.Link type="danger">
                               Batal
                             </Typography.Link>
                           </Popconfirm>
@@ -172,11 +172,7 @@ const EditableTable = <T extends { id: React.Key }>({
                             >
                               <Typography.Link
                                 disabled={editingKey !== ''}
-                                className={
-                                  editingKey !== ''
-                                    ? ''
-                                    : 'text-danger hover:text-danger-light'
-                                }
+                                type="danger"
                               >
                                 Hapus
                               </Typography.Link>
