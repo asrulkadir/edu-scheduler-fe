@@ -3,6 +3,7 @@ import {
   DatePicker,
   Form,
   Input,
+  message,
   Popconfirm,
   Select,
   Table,
@@ -113,8 +114,8 @@ const EditableTable = <T extends { id: React.Key }>({
       const row = (await form.validateFields()) as T;
       await onSave(key, row);
       setEditingKey('');
-    } catch (errInfo) {
-      console.log('Validate Failed:', errInfo);
+    } catch {
+      message.error('Terjadi kesalahan saat menyimpan data');
     }
   };
 
