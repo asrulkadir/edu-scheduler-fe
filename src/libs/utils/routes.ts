@@ -70,6 +70,16 @@ export const routes = [
     },
   },
   {
+    name: 'Kalender Akademik',
+    href: '/dashboard/academic-calendar',
+    scope: {
+      create: ['ADMIN', 'SUPERADMIN'],
+      read: ['ADMIN', 'TEACHER', 'STUDENT', 'SUPERADMIN'],
+      update: ['ADMIN', 'SUPERADMIN'],
+      delete: ['ADMIN', 'SUPERADMIN'],
+    },
+  },
+  {
     name: 'User',
     href: '/dashboard/user',
     scope: {

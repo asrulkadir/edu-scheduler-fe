@@ -1,13 +1,22 @@
 import { ERole } from '@/libs/utils/enum';
-import { Form, Input, Popconfirm, Select, Table, Typography } from 'antd';
+import {
+  DatePicker,
+  Form,
+  Input,
+  Popconfirm,
+  Select,
+  Table,
+  Typography,
+} from 'antd';
 import type { TableColumnProps, TableProps } from 'antd';
+import dayjs from 'dayjs';
 import React, { useState } from 'react';
 
 interface EditableCellProps<T> extends React.HTMLAttributes<HTMLElement> {
   editing: boolean;
   dataIndex: string;
   title: never;
-  inputType: 'number' | 'text' | 'select';
+  inputType: 'number' | 'text' | 'role' | 'date';
   record: T;
   index: number;
 }
@@ -20,18 +29,18 @@ const EditableCell = <T extends object>({
   children,
   ...restProps
 }: EditableCellProps<T>) => {
-  const inputNode =
-    inputType === 'select' ? (
-      <Select
-        options={[
-          { value: ERole.ADMIN, label: ERole.ADMIN },
-          { value: ERole.TEACHER, label: ERole.TEACHER },
-          { value: ERole.STUDENT, label: ERole.STUDENT },
-        ]}
-      />
-    ) : (
-      <Input />
-    );
+  const inputNode = {
+    number: <Input type="number" />,
+    text: <Input />,
+    role: (
+      <Select>
+        <Select.Option value={ERole.ADMIN}>{ERole.ADMIN}</Select.Option>
+        <Select.Option value={ERole.TEACHER}>{ERole.TEACHER}</Select.Option>
+        <Select.Option value={ERole.STUDENT}>{ERole.STUDENT}</Select.Option>
+      </Select>
+    ),
+    date: <DatePicker format="DD/MM/YYYY" />,
+  };
 
   return (
     <td {...restProps}>
@@ -46,7 +55,7 @@ const EditableCell = <T extends object>({
             },
           ]}
         >
-          {inputNode}
+          {inputNode[inputType]}
         </Form.Item>
       ) : (
         children
@@ -57,7 +66,9 @@ const EditableCell = <T extends object>({
 
 interface EditableTableProps<T> extends TableProps<T> {
   data: T[];
-  columns: Array<TableColumnProps<T> & { editable?: boolean }>;
+  columns: Array<
+    TableColumnProps<T> & { editable?: boolean; inputType?: string }
+  >;
   onSave: (key: React.Key, row: T) => Promise<void>;
   onDelete: (key: React.Key) => void;
   editable?: boolean;
@@ -78,8 +89,18 @@ const EditableTable = <T extends { id: React.Key }>({
 
   const isEditing = (record: T) => record.id === editingKey;
 
-  const edit = (record: Partial<T> & { id: React.Key }) => {
-    form.setFieldsValue({ ...record });
+  const edit = (
+    record: Partial<T> & {
+      id: React.Key;
+      startTime?: string;
+      endTime?: string;
+    },
+  ) => {
+    form.setFieldsValue({
+      ...record,
+      startTime: dayjs(record.startTime),
+      endTime: dayjs(record.endTime),
+    });
     setEditingKey(record.id);
   };
 
@@ -105,7 +126,7 @@ const EditableTable = <T extends { id: React.Key }>({
       ...col,
       onCell: (record: T) => ({
         record,
-        inputType: col.dataIndex === 'role' ? 'select' : 'text',
+        inputType: col.inputType || 'text',
         dataIndex: col.dataIndex,
         title: col.title,
         editing: isEditing(record),

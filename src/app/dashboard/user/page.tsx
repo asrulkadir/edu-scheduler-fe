@@ -21,9 +21,10 @@ import {
   Select,
   TableColumnProps,
 } from 'antd';
+import { getDifferences } from '@/libs/utils/helpers';
 
 const Page = () => {
-  const user = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const { users, loadingUsers, mutate } = useUsers();
   const { updateUser, loadingUpdateUser } = useUpdateUser();
   const { deleteUser, loadingDeleteUser } = useDeleteUser();
@@ -46,13 +47,7 @@ const Page = () => {
     };
     const previousData = data.find((item) => item.id === key);
 
-    // Get the difference between the new data and the previous data
-    const diff = Object.fromEntries(
-      Object.entries(newData).filter(
-        ([key, value]) =>
-          previousData && value !== previousData[key as keyof TUser],
-      ),
-    );
+    const diff = getDifferences<TUser>(newData, previousData);
 
     await updateUser(
       { id: key.toString(), ...diff },
@@ -83,7 +78,10 @@ const Page = () => {
     );
   };
 
-  const columns: (TableColumnProps<TUser> & { editable?: boolean })[] = [
+  const columns: (TableColumnProps<TUser> & {
+    editable?: boolean;
+    inputType?: 'text' | 'role';
+  })[] = [
     {
       title: 'Username',
       dataIndex: 'username',
@@ -107,6 +105,7 @@ const Page = () => {
       dataIndex: 'role',
       key: 'role',
       editable: true,
+      inputType: 'role',
     },
   ];
 
@@ -178,12 +177,7 @@ const Page = () => {
           </Button>,
         ]}
       >
-        <Form
-          onFinish={onFinish}
-          autoComplete="off"
-          layout="vertical"
-          form={form}
-        >
+        <Form onFinish={onFinish} layout="vertical" form={form}>
           <Form.Item<TCreateUserRequest>
             label="Nama"
             name="name"

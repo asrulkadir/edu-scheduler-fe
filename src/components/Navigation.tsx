@@ -8,7 +8,7 @@ import { useContext } from 'react';
 
 const Navigation = () => {
   const pathname = usePathname();
-  const user = useContext(UserContext);
+  const { user } = useContext(UserContext);
 
   return (
     <nav className="sticky top-0 left-0">
