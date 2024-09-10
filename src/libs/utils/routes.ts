@@ -50,8 +50,8 @@ export const routes = [
     },
   },
   {
-    name: 'Siswa',
-    href: '/dashboard/student',
+    name: 'Kelas',
+    href: '/dashboard/class-page',
     scope: {
       create: ['ADMIN', 'SUPERADMIN'],
       read: ['ADMIN', 'TEACHER', 'STUDENT', 'SUPERADMIN'],
@@ -60,8 +60,8 @@ export const routes = [
     },
   },
   {
-    name: 'Kelas',
-    href: '/dashboard/class-page',
+    name: 'Siswa',
+    href: '/dashboard/student',
     scope: {
       create: ['ADMIN', 'SUPERADMIN'],
       read: ['ADMIN', 'TEACHER', 'STUDENT', 'SUPERADMIN'],

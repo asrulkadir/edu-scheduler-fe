@@ -42,7 +42,6 @@ const LoginPage = () => {
             layout="vertical"
             initialValues={{ remember: true }}
             onFinish={onFinish}
-            autoComplete="off"
           >
             <Form.Item
               label="Username"
