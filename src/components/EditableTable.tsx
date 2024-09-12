@@ -1,4 +1,5 @@
-import { ERole } from '@/libs/utils/enum';
+import { TNameId } from '@/libs/types/common';
+import { EGender, ERole } from '@/libs/utils/enum';
 import {
   DatePicker,
   Form,
@@ -7,6 +8,7 @@ import {
   Popconfirm,
   Select,
   Table,
+  Tag,
   Typography,
 } from 'antd';
 import type { TableColumnProps, TableProps } from 'antd';
@@ -17,9 +19,16 @@ interface EditableCellProps<T> extends React.HTMLAttributes<HTMLElement> {
   editing: boolean;
   dataIndex: string;
   title: never;
-  inputType: 'number' | 'text' | 'role' | 'date';
+  inputType:
+    | 'number'
+    | 'text'
+    | 'role'
+    | 'date'
+    | 'gender'
+    | 'customSelectMultiple';
   record: T;
   index: number;
+  dataSelect?: TNameId[];
 }
 
 const EditableCell = <T extends object>({
@@ -27,6 +36,7 @@ const EditableCell = <T extends object>({
   dataIndex,
   title,
   inputType,
+  dataSelect,
   children,
   ...restProps
 }: EditableCellProps<T>) => {
@@ -41,6 +51,31 @@ const EditableCell = <T extends object>({
       </Select>
     ),
     date: <DatePicker format="DD/MM/YYYY" />,
+    gender: (
+      <Select>
+        <Select.Option value={EGender.male}>Laki-laki</Select.Option>
+        <Select.Option value={EGender.female}>Perempuan</Select.Option>
+      </Select>
+    ),
+    customSelectMultiple: (
+      <Select
+        mode="multiple"
+        tagRender={(props) => {
+          const { label, closable, onClose } = props;
+          return (
+            <Tag color="blue" closable={closable} onClose={onClose}>
+              {label}
+            </Tag>
+          );
+        }}
+      >
+        {dataSelect?.map((item) => (
+          <Select.Option key={item.id} value={item.id}>
+            {item.name}
+          </Select.Option>
+        ))}
+      </Select>
+    ),
   };
 
   return (
@@ -68,7 +103,11 @@ const EditableCell = <T extends object>({
 interface EditableTableProps<T> extends TableProps<T> {
   data: T[];
   columns: Array<
-    TableColumnProps<T> & { editable?: boolean; inputType?: string }
+    TableColumnProps<T> & {
+      editable?: boolean;
+      inputType?: string;
+      dataSelect?: TNameId[];
+    }
   >;
   onSave: (key: React.Key, row: T) => Promise<void>;
   onDelete: (key: React.Key) => void;
@@ -95,12 +134,14 @@ const EditableTable = <T extends { id: React.Key }>({
       id: React.Key;
       startTime?: string;
       endTime?: string;
+      subjects?: TNameId[];
     },
   ) => {
     form.setFieldsValue({
       ...record,
       startTime: dayjs(record.startTime),
       endTime: dayjs(record.endTime),
+      subjects: record.subjects?.map((subject) => subject.id),
     });
     setEditingKey(record.id);
   };
@@ -131,6 +172,7 @@ const EditableTable = <T extends { id: React.Key }>({
         dataIndex: col.dataIndex,
         title: col.title,
         editing: isEditing(record),
+        dataSelect: col.dataSelect,
       }),
     };
   });
@@ -154,6 +196,7 @@ const EditableTable = <T extends { id: React.Key }>({
                   {
                     title: 'Aksi',
                     dataIndex: 'id',
+                    fixed: 'right',
                     render: (_: unknown, record: T) => {
                       const isEditable = isEditing(record);
                       return isEditable ? (

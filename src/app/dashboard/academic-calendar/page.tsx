@@ -206,20 +206,6 @@ const Page = () => {
           >
             <Input placeholder="Masukkan nama kalender akademik" />
           </Form.Item>
-          {/* <Form.Item<TCreateAcademicCalendarRequest>
-            name="startTime"
-            label="Tanggal Mulai"
-            rules={[{ required: true, message: 'Tanggal mulai harus diisi' }]}
-          >
-            <DatePicker />
-          </Form.Item>
-          <Form.Item<TCreateAcademicCalendarRequest>
-            name="endTime"
-            label="Tanggal Selesai"
-            rules={[{ required: true, message: 'Tanggal selesai harus diisi' }]}
-          >
-            <DatePicker />
-          </Form.Item> */}
           <Form.Item
             name="range"
             label="Rentang Waktu Kalender Akademik"

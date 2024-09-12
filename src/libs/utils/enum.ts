@@ -5,3 +5,8 @@ export enum ERole {
   SUPERADMIN = 'SUPERADMIN',
   NONE = '',
 }
+
+export enum EGender {
+  male = 'male',
+  female = 'female',
+}
