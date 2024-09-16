@@ -13,7 +13,7 @@ const Navigation = () => {
   return (
     <nav className="sticky top-0 left-0">
       <div className="h-16 shadow-md flex items-center justify-center sticky top-0 left-0 bg-primary-dark">
-        Logo
+        Skeduler
       </div>
       <ul className="flex flex-col gap-2 p-4">
         {routes
