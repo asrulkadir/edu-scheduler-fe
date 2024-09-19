@@ -18,7 +18,7 @@ export const useSubjects = () => {
 
   return {
     subjects: data?.data,
-    loadingSubjectss: isLoading,
+    loadingSubjects: isLoading,
     error,
     mutateSubjectss: mutate,
   };

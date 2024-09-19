@@ -9,3 +9,10 @@ export function getDifferences<T extends Record<string, unknown>>(
     ),
   ) as Partial<T>;
 }
+
+export const truncateText = (text: string, length = 15) => {
+  if (text.length > length) {
+    return `${text.substring(0, length)}...`;
+  }
+  return text;
+};

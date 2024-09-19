@@ -25,6 +25,7 @@ import {
 import { getDifferences } from '@/libs/utils/helpers';
 import { TNameId } from '@/libs/types/common';
 import { useSubjects } from '@/hooks/useSubjects';
+import SelectComp from '@/components/Select';
 
 const Page = () => {
   const { user } = useContext(UserContext);
@@ -243,7 +244,7 @@ const Page = () => {
               placeholder="Pilih jenis kelamin"
             />
           </Form.Item>
-          <Form.Item
+          <Form.Item<TCreateTeacherRequest>
             name="phone"
             label="No. HP"
             rules={[
@@ -263,7 +264,7 @@ const Page = () => {
             name="subjects"
             label="Mata Pelajaran"
           >
-            <Select
+            <SelectComp
               mode="multiple"
               options={subjects?.map((item) => ({
                 value: item.id,
