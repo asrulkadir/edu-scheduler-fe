@@ -77,13 +77,11 @@ const Page = () => {
 
   const onFinish = (values: TCreateClassRequest) => {
     if (keyEdit) {
-      console.log('values', values);
       const filteredValue = Object.fromEntries(
         Object.entries(values).filter(
           ([, value]) => value !== null && value !== '',
         ),
       );
-      console.log('filteredValue', filteredValue);
       updateClass(
         {
           ...filteredValue,
