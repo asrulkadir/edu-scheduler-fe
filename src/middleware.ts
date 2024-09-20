@@ -12,7 +12,11 @@ export default async function middleware(req: NextRequest) {
 
   const session = cookies().get('session');
   const role = cookies().get('role');
-  const findPage = routes.find((route) => route.href === path);
+  const findPage = routes.find((route) => {
+    const splitPath = path.split('/');
+    const splitHref = route.href.split('/');
+    return splitPath?.[2] === splitHref?.[2];
+  });
   const permissionAccessPage =
     role && findPage?.scope.read.includes(role.value);
 
