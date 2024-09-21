@@ -11,6 +11,7 @@ import {
   Modal,
   Popconfirm,
   Select,
+  Spin,
   Tag,
   Tooltip,
 } from 'antd';
@@ -38,12 +39,14 @@ import { useTeacher } from '@/hooks/useTeacher';
 import { useSubjects } from '@/hooks/useSubjects';
 import { useStudents } from '@/hooks/useStudent';
 import SelectComp from '@/components/Select';
+import { useRouter } from 'next/navigation';
 
 const Page = () => {
   const [form] = Form.useForm();
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [keyEdit, setKeyEdit] = useState('');
-  const { classesData, mutateClass } = useClass();
+  const { classesData, mutateClass, loadingClass } = useClass();
   const { createClass, loadingCreateClass } = useCreateClass();
   const { updateClass, loadingUpdateClass } = useUpdateClass();
   const { deleteClass } = useDeleteClass();
@@ -145,6 +148,7 @@ const Page = () => {
           Tambah Kelas
         </Button>
         <div className="grid grid-cols-3 gap-6">
+          {loadingClass && <Spin />}
           {classesData?.map((classData) => (
             <Card
               key={classData.id}
@@ -162,7 +166,13 @@ const Page = () => {
               extra={
                 <div>
                   <Tooltip title="Lihat detail" placement="topRight">
-                    <Button type="link" icon={<EyeOutlined />} />
+                    <Button
+                      type="link"
+                      icon={<EyeOutlined />}
+                      onClick={() => {
+                        router.push(`/dashboard/class-page/${classData.id}`);
+                      }}
+                    />
                   </Tooltip>
                   <Tooltip title="Edit" placement="topRight">
                     <Button
