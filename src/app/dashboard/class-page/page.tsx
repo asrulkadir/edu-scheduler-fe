@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-wrap-multilines */
 'use client';
 
 import { useState } from 'react';
@@ -135,7 +134,7 @@ const Page = () => {
   return (
     <>
       <div>
-        <h1 className="mb-6 text-3xl font-extrabold text-gray-800">
+        <h1 className="mb-6 text-2xl font-extrabold text-gray-800">
           Daftar Kelas
         </h1>
         <Button
@@ -275,8 +274,7 @@ const Page = () => {
               loading={loadingTeachers}
               showSearch
               filterOption={(input, option) =>
-                (option?.label ?? '')
-                  .toString()
+                String(option?.label ?? '')
                   .toLowerCase()
                   .includes(input.toLowerCase())
               }
@@ -296,7 +294,7 @@ const Page = () => {
               loading={loadingSubjects}
               showSearch
               filterOption={(input, option) =>
-                (option?.label ?? '')
+                String(option?.label ?? '')
                   .toString()
                   .toLowerCase()
                   .includes(input.toLowerCase())
@@ -317,7 +315,7 @@ const Page = () => {
               loading={loadingStudents}
               showSearch
               filterOption={(input, option) =>
-                (option?.label ?? '')
+                String(option?.label ?? '')
                   .toString()
                   .toLowerCase()
                   .includes(input.toLowerCase())

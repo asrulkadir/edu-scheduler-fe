@@ -25,11 +25,10 @@ export const useClass = () => {
 };
 
 export const useClassById = (id: string) => {
-  const { data, isLoading, error }: SWRResponse<TResponseSWR<TClass>> = useSWR(
-    `/api/class/${id}`,
-  );
+  const { data, isLoading, error, mutate }: SWRResponse<TResponseSWR<TClass>> =
+    useSWR(`/api/class/${id}`);
 
-  return { classData: data?.data, loadingClassById: isLoading, error };
+  return { classData: data?.data, loadingClassById: isLoading, error, mutate };
 };
 
 export const useUpdateClass = () => {
