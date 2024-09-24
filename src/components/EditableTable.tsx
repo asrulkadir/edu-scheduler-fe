@@ -68,13 +68,39 @@ const EditableCell = <T extends object>({
             </Tag>
           );
         }}
-      >
-        {dataSelect?.map((item) => (
-          <Select.Option key={item.id} value={item.id}>
-            {item.name}
-          </Select.Option>
-        ))}
-      </Select>
+        showSearch
+        filterOption={(input, option) =>
+          String(option?.label ?? '')
+            .toLowerCase()
+            .includes(input.toLowerCase())
+        }
+        options={dataSelect?.map((item) => ({
+          value: item.id,
+          label: item.name,
+        }))}
+      />
+    ),
+    customSelect: (
+      <Select
+        tagRender={(props) => {
+          const { label, closable, onClose } = props;
+          return (
+            <Tag color="blue" closable={closable} onClose={onClose}>
+              {label}
+            </Tag>
+          );
+        }}
+        showSearch
+        filterOption={(input, option) =>
+          String(option?.label ?? '')
+            .toLowerCase()
+            .includes(input.toLowerCase())
+        }
+        options={dataSelect?.map((item) => ({
+          value: item.id,
+          label: item.name,
+        }))}
+      />
     ),
   };
 
