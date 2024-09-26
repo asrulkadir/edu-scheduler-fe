@@ -19,7 +19,7 @@ function DashboardLayout({
         </Sider>
         <Layout>
           <HeaderDashboard />
-          <Content className="flex min-h-screen flex-col p-8 bg-white">
+          <Content className="flex min-h-screen flex-col bg-white p-8">
             {children}
           </Content>
         </Layout>

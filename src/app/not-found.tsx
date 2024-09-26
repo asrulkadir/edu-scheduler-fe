@@ -24,21 +24,21 @@ export default function NotFound() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
-      <h2 className="text-6xl font-bold text-red-600 mb-4">404</h2>
-      <p className="text-xl text-gray-600 mb-8">
+    <div className="flex h-screen flex-col items-center justify-center bg-gray-100">
+      <h2 className="mb-4 text-6xl font-bold text-red-600">404</h2>
+      <p className="mb-8 text-xl text-gray-600">
         Oops! Halaman yang Anda cari tidak ditemukan.
       </p>
       <Button
         onClick={onReturnHome}
-        className="p-6 bg-primary-dark text-white rounded-md text-lg font-semibold hover:bg-primary transition"
+        className="rounded-md bg-primary-dark p-6 text-lg font-semibold text-white transition hover:bg-primary"
       >
         Kembali ke Halaman Utama
       </Button>
       {role && (
         <Button
           onClick={onBack}
-          className="p-6 bg-primary-dark text-white rounded-md text-lg font-semibold hover:bg-primary transition mt-5"
+          className="mt-5 rounded-md bg-primary-dark p-6 text-lg font-semibold text-white transition hover:bg-primary"
         >
           Kembali ke Dashboard
         </Button>

@@ -17,11 +17,11 @@ export default function Home() {
     <>
       <Header />
       <Content className="flex items-center justify-center bg-gray-100 p-12">
-        <div className="bg-white p-8 rounded shadow-md w-full max-w-3xl text-center space-y-6">
+        <div className="w-full max-w-3xl space-y-6 rounded bg-white p-8 text-center shadow-md">
           <h1 className="text-4xl font-bold text-primary-light">
             Selamat Datang di School Scheduler
           </h1>
-          <p className="text-gray-700 text-lg">
+          <p className="text-lg text-gray-700">
             School Scheduler adalah aplikasi web yang dirancang untuk membantu
             sekolah mengelola dan mengatur jadwal pengajaran yang lebih efisien.
             Buat, kelola, dan bagikan jadwal dengan mudah kepada guru dan siswa.

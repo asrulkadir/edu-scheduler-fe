@@ -155,13 +155,13 @@ const Page = () => {
                 <Tooltip
                   title={classData.name.length > 15 ? classData.name : null}
                 >
-                  <div className="text-xl font-bold flex items-center">
+                  <div className="flex items-center text-xl font-bold">
                     <BookOutlined className="mr-2" />
                     {truncateText(classData.name)}
                   </div>
                 </Tooltip>
               }
-              className="shadow-lg hover:shadow-xl transition-shadow bg-white rounded-lg border border-gray-200"
+              className="rounded-lg border border-gray-200 bg-white shadow-lg transition-shadow hover:shadow-xl"
               extra={
                 <div>
                   <Tooltip title="Lihat detail" placement="topRight">
@@ -196,7 +196,7 @@ const Page = () => {
               <p className="mb-4 text-center">{classData.description}</p>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className=" text-center font-bold">
+                  <p className="text-center font-bold">
                     <UserOutlined className="mr-2" /> Wali Kelas
                   </p>
                   <p className="text-center">
