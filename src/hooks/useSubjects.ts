@@ -20,7 +20,7 @@ export const useSubjects = () => {
     subjects: data?.data,
     loadingSubjects: isLoading,
     error,
-    mutateSubjectss: mutate,
+    mutateSubjects: mutate,
   };
 };
 
