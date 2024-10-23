@@ -11,8 +11,8 @@ const Navigation = () => {
   const { user } = useContext(UserContext);
 
   return (
-    <nav className="sticky top-0 left-0">
-      <div className="h-16 shadow-md flex items-center justify-center sticky top-0 left-0 bg-primary-dark">
+    <nav className="sticky left-0 top-0">
+      <div className="sticky left-0 top-0 flex h-16 items-center justify-center bg-primary-dark shadow-md">
         Skeduler
       </div>
       <ul className="flex flex-col gap-2 p-4">
@@ -23,10 +23,10 @@ const Navigation = () => {
             return (
               <Link href={route.href} key={route.href}>
                 <li
-                  className={`p-2 m-2 rounded-md font-bold ${
+                  className={`m-2 rounded-md p-2 font-bold ${
                     isActive
                       ? 'bg-blue-500 text-white'
-                      : 'hover:bg-gray-200 text-black'
+                      : 'text-black hover:bg-gray-200'
                   }`}
                 >
                   {route.name}

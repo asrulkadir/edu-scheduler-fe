@@ -8,7 +8,7 @@ interface HeaderProps {
 
 const Header = ({ showLogin = true }: HeaderProps) => {
   return (
-    <header className="sticky top-0 left-0 w-full h-16 bg-white shadow-md flex items-center justify-between px-4">
+    <header className="sticky left-0 top-0 flex h-16 w-full items-center justify-between bg-white px-4 shadow-md">
       <h1 className="text-xl font-bold text-primary-dark">
         <Link href="/">School Scheculer</Link>
       </h1>

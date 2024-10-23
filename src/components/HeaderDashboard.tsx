@@ -30,7 +30,7 @@ const HeaderDashboard = () => {
   return (
     <>
       {contextHolder}
-      <Header className="sticky top-0 left-0 w-full h-16 bg-secondary shadow-md flex items-center justify-between z-[99]">
+      <Header className="sticky left-0 top-0 z-[99] flex h-16 w-full items-center justify-between bg-secondary shadow-md">
         <h1 className="text-xl font-bold">
           {routes.find((route) => route.href === pathname)?.name}
         </h1>
