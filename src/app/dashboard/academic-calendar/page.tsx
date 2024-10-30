@@ -162,6 +162,7 @@ const Page = () => {
           icon={<PlusOutlined />}
           onClick={showModal}
           type="primary"
+          size="large"
         >
           Tambah Calendar Akademik
         </Button>

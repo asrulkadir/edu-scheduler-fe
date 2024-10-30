@@ -166,6 +166,7 @@ const Page = () => {
           icon={<PlusOutlined />}
           onClick={showModal}
           type="primary"
+          size="large"
         >
           Tambah Siswa
         </Button>

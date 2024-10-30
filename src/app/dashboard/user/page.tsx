@@ -144,6 +144,7 @@ const Page = () => {
           icon={<PlusOutlined />}
           onClick={showModal}
           type="primary"
+          size="large"
         >
           Tambah User
         </Button>
