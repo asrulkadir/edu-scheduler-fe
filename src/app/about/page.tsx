@@ -12,8 +12,8 @@ export default function Home() {
   return (
     <>
       <Header />
-      <Content className="p-12 bg-gray-100">
-        <div className="max-w-4xl mx-auto bg-white p-8 rounded shadow-md">
+      <Content className="bg-gray-100 p-12">
+        <div className="mx-auto max-w-4xl rounded bg-white p-8 shadow-md">
           <Title className="text-center text-primary-light">
             Tentang School Scheduler
           </Title>

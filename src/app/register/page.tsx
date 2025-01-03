@@ -38,9 +38,9 @@ const RegisterPage = () => {
   return (
     <>
       <Header />
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-primary-light to-primary-dark p-8">
-        <div className="w-full max-w-md p-8 space-y-6 bg-white rounded shadow-md">
-          <h1 className="text-2xl font-bold text-center">Register Page</h1>
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-r from-primary-light to-primary-dark p-8">
+        <div className="w-full max-w-md space-y-6 rounded bg-white p-8 shadow-md">
+          <h1 className="text-center text-2xl font-bold">Register Page</h1>
           <Form form={form} layout="vertical" onFinish={handleRegister}>
             <Form.Item<TRegisterUserRequest>
               label="Nama Lembaga"

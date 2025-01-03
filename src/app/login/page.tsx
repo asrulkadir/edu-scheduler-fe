@@ -34,9 +34,9 @@ const LoginPage = () => {
   return (
     <>
       <Header showLogin={false} />
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-primary-light to-primary-dark">
-        <div className="w-full max-w-md p-8 space-y-6 bg-white rounded shadow-md">
-          <h1 className="text-2xl font-bold text-center">Halaman Login</h1>
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-r from-primary-light to-primary-dark">
+        <div className="w-full max-w-md space-y-6 rounded bg-white p-8 shadow-md">
+          <h1 className="text-center text-2xl font-bold">Halaman Login</h1>
           <Form
             name="basic"
             layout="vertical"
@@ -74,7 +74,7 @@ const LoginPage = () => {
               </Button>
             </Form.Item>
           </Form>
-          {error && <p className="text-red-500 text-center">{error.message}</p>}
+          {error && <p className="text-center text-red-500">{error.message}</p>}
           <p className="text-center">
             Tidak punya akun?{' '}
             <Link href="/register" className="text-blue-500">
