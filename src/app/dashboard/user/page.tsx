@@ -8,7 +8,7 @@ import {
 } from '@/hooks/useUser';
 import { TCreateUserRequest, TUser } from '@/libs/types/user';
 import { PlusOutlined } from '@ant-design/icons';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { UserContext } from '@/context/UserContext';
 import { ERole } from '@/libs/utils/enum';
 import EditableTable from '@/components/EditableTable';
@@ -32,13 +32,7 @@ const Page = () => {
   const [open, setOpen] = useState(false);
   const [form] = Form.useForm();
 
-  const [data, setData] = useState<TUser[]>([]);
-
-  useEffect(() => {
-    if (users) {
-      setData(users);
-    }
-  }, [users]);
+  const data = users ?? [];
 
   const handleSave = async (key: React.Key, row: TUser) => {
     const newData = {

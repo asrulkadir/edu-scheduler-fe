@@ -12,7 +12,7 @@ import {
 import { PlusOutlined } from '@ant-design/icons';
 import EditableTable from '@/components/EditableTable';
 import { TCreateStudentRequest, TStudent } from '@/libs/types/student';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { EGender, ERole } from '@/libs/utils/enum';
 import { useClass } from '@/hooks/useClass';
 import {
@@ -31,7 +31,6 @@ const Page = () => {
     user?.role === ERole.SUPERADMIN || user?.role === ERole.ADMIN;
   const [form] = Form.useForm();
   const [open, setOpen] = useState(false);
-  const [data, setData] = useState<TStudent[]>([]);
   const { students, loadingStudents, mutateStudents } = useStudents();
   const { updateStudent, loadingUpdateStudent } = useUpdateStudent();
   const { createStudent, loadingCreateStudent } = useCreateStudent();
@@ -39,11 +38,7 @@ const Page = () => {
 
   const { classesData, loadingClass } = useClass();
 
-  useEffect(() => {
-    if (students) {
-      setData(students);
-    }
-  }, [students]);
+  const data = students ?? [];
 
   const showModal = () => {
     setOpen(true);

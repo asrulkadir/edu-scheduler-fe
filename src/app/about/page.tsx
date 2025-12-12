@@ -14,7 +14,7 @@ export default function Home() {
       <Header />
       <Content className="bg-gray-100 p-12">
         <div className="mx-auto max-w-4xl rounded bg-white p-8 shadow-md">
-          <Title className="text-center text-primary-light">
+          <Title className="text-primary-light text-center">
             Tentang School Scheduler
           </Title>
           <Paragraph className="text-lg text-gray-700">
@@ -26,7 +26,7 @@ export default function Home() {
             yang intuitif dan ramah pengguna yang menyederhanakan proses
             penjadwalan dan meningkatkan komunikasi dalam institusi pendidikan.
           </Paragraph>
-          <Title level={2} className="mt-8 text-primary-light">
+          <Title level={2} className="text-primary-light mt-8">
             Our Team
           </Title>
           <Row gutter={16} className="mt-4">

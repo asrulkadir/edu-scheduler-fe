@@ -18,7 +18,7 @@ export default function Home() {
       <Header />
       <Content className="flex items-center justify-center bg-gray-100 p-12">
         <div className="w-full max-w-3xl space-y-6 rounded bg-white p-8 text-center shadow-md">
-          <h1 className="text-4xl font-bold text-primary-light">
+          <h1 className="text-primary-light text-4xl font-bold">
             Selamat Datang di School Scheduler
           </h1>
           <p className="text-lg text-gray-700">

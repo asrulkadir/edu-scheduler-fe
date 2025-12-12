@@ -11,8 +11,8 @@ const Navigation = () => {
   const { user } = useContext(UserContext);
 
   return (
-    <nav className="sticky left-0 top-0">
-      <div className="sticky left-0 top-0 flex h-16 items-center justify-center bg-primary-dark shadow-md">
+    <nav className="sticky top-0 left-0">
+      <div className="bg-primary-dark sticky top-0 left-0 flex h-16 items-center justify-center shadow-md">
         Skeduler
       </div>
       <ul className="flex flex-col gap-2 p-4">

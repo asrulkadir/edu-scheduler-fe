@@ -30,7 +30,7 @@ const HeaderDashboard = () => {
   return (
     <>
       {contextHolder}
-      <Header className="sticky left-0 top-0 z-[99] flex h-16 w-full items-center justify-between bg-secondary shadow-md">
+      <Header className="bg-secondary sticky top-0 left-0 z-[99] flex h-16 w-full items-center justify-between shadow-md">
         <h1 className="text-xl font-bold">
           {routes.find((route) => route.href === pathname)?.name}
         </h1>
@@ -42,7 +42,7 @@ const HeaderDashboard = () => {
             Tidak ada kalender akademik yang berjalan, ke halaman{' '}
             <Link
               href="/dashboard/academic-calendar"
-              className="text-lg font-bold text-primary-light hover:underline"
+              className="text-primary-light text-lg font-bold hover:underline"
             >
               kalender akademik
             </Link>

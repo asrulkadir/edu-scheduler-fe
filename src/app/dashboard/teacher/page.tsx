@@ -13,7 +13,7 @@ import {
 import { PlusOutlined } from '@ant-design/icons';
 import EditableTable from '@/components/EditableTable';
 import { TCreateTeacherRequest, TTeacher } from '@/libs/types/teacher';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { UserContext } from '@/context/UserContext';
 import { EGender, ERole } from '@/libs/utils/enum';
 import {
@@ -32,7 +32,6 @@ const Page = () => {
   const permission =
     user?.role === ERole.SUPERADMIN || user?.role === ERole.ADMIN;
   const [open, setOpen] = useState(false);
-  const [data, setData] = useState<TTeacher[]>([]);
   const { teachers, mutateTeachers, loadingTeachers } = useTeacher();
   const { updateTeacher, loadingUpdateTeacher } = useUpdateTeacher();
   const { deleteTeacher, loadingDeleteTeacher } = useDeleteTeacher();
@@ -40,11 +39,7 @@ const Page = () => {
   const { subjects } = useSubjects();
   const [form] = Form.useForm();
 
-  useEffect(() => {
-    if (teachers) {
-      setData(teachers);
-    }
-  }, [teachers]);
+  const data = teachers ?? [];
 
   const showModal = () => {
     setOpen(true);

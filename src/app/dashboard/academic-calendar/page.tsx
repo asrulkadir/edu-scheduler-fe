@@ -1,6 +1,6 @@
 'use client';
 
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import {
   Button,
   DatePicker,
@@ -44,13 +44,7 @@ const Page = () => {
   const { deleteAcademicCalendar, loadingDeleteAcademicCalendar } =
     useDeleteAcademicCalendar();
 
-  const [data, setData] = useState<TAcademicCalendar[]>([]);
-
-  useEffect(() => {
-    if (academicCalendars) {
-      setData(academicCalendars);
-    }
-  }, [academicCalendars]);
+  const data = academicCalendars ?? [];
 
   const showModal = () => {
     setOpen(true);

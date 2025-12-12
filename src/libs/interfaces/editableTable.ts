@@ -1,7 +1,8 @@
 import { TableColumnProps, TableProps } from 'antd';
 
-export interface EditableCellProps<T>
-  extends React.HTMLAttributes<HTMLElement> {
+export interface EditableCellProps<
+  T,
+> extends React.HTMLAttributes<HTMLElement> {
   editing: boolean;
   dataIndex: string;
   title: never;

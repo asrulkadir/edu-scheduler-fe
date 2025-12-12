@@ -8,8 +8,8 @@ interface HeaderProps {
 
 const Header = ({ showLogin = true }: HeaderProps) => {
   return (
-    <header className="sticky left-0 top-0 flex h-16 w-full items-center justify-between bg-white px-4 shadow-md">
-      <h1 className="text-xl font-bold text-primary-dark">
+    <header className="sticky top-0 left-0 flex h-16 w-full items-center justify-between bg-white px-4 shadow-md">
+      <h1 className="text-primary-dark text-xl font-bold">
         <Link href="/">School Scheculer</Link>
       </h1>
       <div className="flex items-center gap-20">

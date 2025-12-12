@@ -4,16 +4,12 @@ import { useLogout } from '@/hooks/useAuth';
 import { getCookie } from '@/libs/utils/cookies';
 import { Button } from 'antd';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 
 export default function NotFound() {
   const router = useRouter();
   const { logout } = useLogout();
-  const [role, setRole] = useState<string | undefined>(undefined);
-
-  useEffect(() => {
-    setRole(getCookie('role'));
-  }, []);
+  const role = useMemo(() => getCookie('role'), []);
 
   const onReturnHome = async () => {
     await logout();
@@ -31,14 +27,14 @@ export default function NotFound() {
       </p>
       <Button
         onClick={onReturnHome}
-        className="rounded-md bg-primary-dark p-6 text-lg font-semibold text-white transition hover:bg-primary"
+        className="bg-primary-dark hover:bg-primary rounded-md p-6 text-lg font-semibold text-white transition"
       >
         Kembali ke Halaman Utama
       </Button>
       {role && (
         <Button
           onClick={onBack}
-          className="mt-5 rounded-md bg-primary-dark p-6 text-lg font-semibold text-white transition hover:bg-primary"
+          className="bg-primary-dark hover:bg-primary mt-5 rounded-md p-6 text-lg font-semibold text-white transition"
         >
           Kembali ke Dashboard
         </Button>
