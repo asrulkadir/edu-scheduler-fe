@@ -2,7 +2,7 @@
 import { useState, type PropsWithChildren } from 'react';
 import { useServerInsertedHTML } from 'next/navigation';
 import { createCache, extractStyle, StyleProvider } from '@ant-design/cssinjs';
-import { ConfigProvider, ThemeConfig } from 'antd';
+import { App, ConfigProvider, ThemeConfig } from 'antd';
 
 const config: ThemeConfig = {
   token: {
@@ -30,7 +30,9 @@ export const RootStyleRegistry = ({ children }: PropsWithChildren) => {
 
   return (
     <StyleProvider cache={cache}>
-      <ConfigProvider theme={config}>{children}</ConfigProvider>
+      <ConfigProvider theme={config}>
+        <App>{children}</App>
+      </ConfigProvider>
     </StyleProvider>
   );
 };

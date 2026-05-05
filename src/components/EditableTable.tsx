@@ -4,13 +4,13 @@ import {
   DatePicker,
   Form,
   Input,
-  message,
   Popconfirm,
   Select,
   Table,
   Tag,
   Typography,
 } from 'antd';
+import { useMessage } from '@/hooks/useMessage';
 import type { TableColumnProps, TableProps } from 'antd';
 import dayjs from 'dayjs';
 import React, { useState } from 'react';
@@ -151,6 +151,7 @@ const EditableTable = <T extends { id: React.Key }>({
   ...restProps
 }: EditableTableProps<T>) => {
   const [form] = Form.useForm();
+  const message = useMessage();
   const [editingKey, setEditingKey] = useState<React.Key>('');
 
   const isEditing = (record: T) => record.id === editingKey;

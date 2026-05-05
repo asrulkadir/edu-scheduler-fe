@@ -2,7 +2,8 @@
 
 import Header from '@/components/Header';
 import { useLogin } from '@/hooks/useAuth';
-import { Button, Form, Input, message } from 'antd';
+import { Button, Form, Input } from 'antd';
+import { useMessage } from '@/hooks/useMessage';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -15,6 +16,7 @@ type FieldType = {
 const LoginPage = () => {
   const { login, isMutating: loading, error } = useLogin();
   const router = useRouter();
+  const message = useMessage();
 
   const onFinish = (values: FieldType) => {
     const { username, password } = values;

@@ -4,12 +4,12 @@ import {
   Button,
   Form,
   Input,
-  message,
   Modal,
   Select,
   TableColumnProps,
   Tag,
 } from 'antd';
+import { useMessage } from '@/hooks/useMessage';
 import { PlusOutlined } from '@ant-design/icons';
 import EditableTable from '@/components/EditableTable';
 import { TCreateTeacherRequest, TTeacher } from '@/libs/types/teacher';
@@ -28,6 +28,7 @@ import { useSubjects } from '@/hooks/useSubjects';
 import SelectComp from '@/components/Select';
 
 const Page = () => {
+  const message = useMessage();
   const { user } = useContext(UserContext);
   const permission =
     user?.role === ERole.SUPERADMIN || user?.role === ERole.ADMIN;
@@ -97,7 +98,7 @@ const Page = () => {
       inputType: 'customSelectMultiple',
       render: (text) =>
         text.map((item: TNameId) => (
-          <Tag key={item.id} color="blue">
+          <Tag key={item.id} color="blue" className="m-0.5">
             {item.name}
           </Tag>
         )),

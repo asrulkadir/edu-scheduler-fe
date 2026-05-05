@@ -1,15 +1,8 @@
 'use client';
 
 import { useContext, useState } from 'react';
-import {
-  Button,
-  DatePicker,
-  Form,
-  Input,
-  message,
-  Modal,
-  TableColumnProps,
-} from 'antd';
+import { Button, DatePicker, Form, Input, Modal, TableColumnProps } from 'antd';
+import { useMessage } from '@/hooks/useMessage';
 import { PlusOutlined } from '@ant-design/icons';
 import {
   TAcademicCalendar,
@@ -30,6 +23,7 @@ import { getDifferences } from '@/libs/utils/helpers';
 const { RangePicker } = DatePicker;
 
 const Page = () => {
+  const message = useMessage();
   const { user } = useContext(UserContext);
   const [open, setOpen] = useState(false);
   const [form] = Form.useForm();

@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 import { routes } from './libs/utils/routes';
 
 const protectedRoutes = ['/dashboard', '/dashboard/*'];
@@ -10,8 +9,8 @@ export default async function middleware(req: NextRequest) {
     path.startsWith(route),
   );
 
-  const session = cookies().get('session');
-  const role = cookies().get('role');
+  const session = req.cookies.get('session');
+  const role = req.cookies.get('role');
   const findPage = routes.find((route) => {
     const splitPath = path.split('/');
     const splitHref = route.href.split('/');

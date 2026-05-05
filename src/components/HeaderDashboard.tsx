@@ -3,7 +3,8 @@
 import { UserContext } from '@/context/UserContext';
 import { useLogout } from '@/hooks/useAuth';
 import { routes } from '@/libs/utils/routes';
-import { Button, Layout, message } from 'antd';
+import { Button, Layout } from 'antd';
+import { useMessage } from '@/hooks/useMessage';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useContext } from 'react';
@@ -14,7 +15,7 @@ const HeaderDashboard = () => {
   const pathname = usePathname();
   const { logout } = useLogout();
   const router = useRouter();
-  const [messageApi, contextHolder] = message.useMessage();
+  const messageApi = useMessage();
   const { academic } = useContext(UserContext);
 
   const onLogout = async () => {
@@ -29,8 +30,7 @@ const HeaderDashboard = () => {
 
   return (
     <>
-      {contextHolder}
-      <Header className="bg-secondary sticky top-0 left-0 z-[99] flex h-16 w-full items-center justify-between shadow-md">
+      <Header className="bg-secondary sticky top-0 left-0 z-99 flex h-16 w-full items-center justify-between shadow-md">
         <h1 className="text-xl font-bold">
           {routes.find((route) => route.href === pathname)?.name}
         </h1>

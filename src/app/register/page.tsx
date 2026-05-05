@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Form, Input, Button, message } from 'antd';
+import { Form, Input, Button } from 'antd';
+import { useMessage } from '@/hooks/useMessage';
 import Link from 'next/link';
 import { TRegisterUserRequest } from '@/libs/types/user';
 import Header from '@/components/Header';
@@ -12,6 +13,7 @@ const RegisterPage = () => {
   const [form] = Form.useForm();
   const { registerUser, loadingRegisterUser } = useRegisterUser();
   const router = useRouter();
+  const message = useMessage();
 
   const handleRegister = (values: TRegisterUserRequest) => {
     registerUser(values, {

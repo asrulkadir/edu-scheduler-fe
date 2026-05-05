@@ -6,13 +6,13 @@ import {
   Divider,
   Form,
   Input,
-  message,
   Modal,
   Popconfirm,
   Spin,
   Tag,
   Tooltip,
 } from 'antd';
+import { useMessage } from '@/hooks/useMessage';
 import {
   PlusOutlined,
   BookOutlined,
@@ -36,6 +36,7 @@ import SelectComp from '@/components/Select';
 import { useTeacher } from '@/hooks/useTeacher';
 
 const Page = () => {
+  const message = useMessage();
   const [form] = Form.useForm();
   const [open, setOpen] = useState(false);
   const [keyEdit, setKeyEdit] = useState('');
@@ -183,7 +184,7 @@ const Page = () => {
               <Divider />
               <div className="col-span-2">
                 <p className="text-center font-bold">Guru Mata Pelajaran:</p>
-                <div className="mt-2 flex justify-center">
+                <div className="mt-2 flex justify-center gap-2">
                   {subject.teacher?.length ? (
                     subject.teacher?.map((t) => (
                       <Tag key={t.id} color="blue">
