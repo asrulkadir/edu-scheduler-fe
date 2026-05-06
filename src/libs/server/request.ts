@@ -14,7 +14,10 @@ export function getBackendUrl(path: string) {
 
 export async function handleRequest(request: NextRequest, path: string) {
   const authorization = await getAuthorizationHeader();
-  const backendUrl = getBackendUrl(path);
+  const searchParams = request.nextUrl.searchParams.toString();
+  const backendUrl = getBackendUrl(
+    searchParams ? `${path}?${searchParams}` : path,
+  );
   return forwardRequestToBackend(request, backendUrl, {
     Authorization: authorization,
   });

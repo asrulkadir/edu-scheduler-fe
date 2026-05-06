@@ -15,7 +15,7 @@ export const routes = [
     scope: {
       create: ['ADMIN', 'SUPERADMIN'],
       read: ['ADMIN', 'TEACHER', 'STUDENT', 'SUPERADMIN'],
-      update: ['ADMIN', 'TEACHER', 'SUPERADMIN'],
+      update: ['ADMIN', 'SUPERADMIN'],
       delete: ['ADMIN', 'SUPERADMIN'],
     },
   },
