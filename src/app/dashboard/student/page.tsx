@@ -56,7 +56,7 @@ const Page = () => {
       editable: true,
     },
     {
-      title: 'NIP',
+      title: 'NIS',
       dataIndex: 'nis',
       key: 'nis',
       editable: true,

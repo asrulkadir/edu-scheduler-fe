@@ -2,13 +2,12 @@
 
 import {
   Button,
-  Card,
-  Divider,
+  Empty,
   Form,
   Input,
   Modal,
   Popconfirm,
-  Spin,
+  Skeleton,
   Tag,
   Tooltip,
 } from 'antd';
@@ -18,6 +17,7 @@ import {
   BookOutlined,
   EditOutlined,
   DeleteOutlined,
+  UserOutlined,
 } from '@ant-design/icons';
 import {
   useCreateSubjects,
@@ -25,7 +25,6 @@ import {
   useSubjects,
   useUpdateSubjects,
 } from '@/hooks/useSubjects';
-import { truncateText } from '@/libs/utils/helpers';
 import { useState } from 'react';
 import {
   TCreateSubjectsRequest,
@@ -124,84 +123,150 @@ const Page = () => {
 
   return (
     <>
-      <div>
-        <h1 className="mb-6 text-2xl font-extrabold text-gray-800">
-          Daftar Mata Pelajaran
-        </h1>
+      {/* Page header */}
+      <div className="mb-6 flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-extrabold text-gray-800">
+            Daftar Mata Pelajaran
+          </h1>
+          <p className="text-sm text-gray-500">
+            {subjects?.length ?? 0} mata pelajaran terdaftar
+          </p>
+        </div>
         <Button
-          className="mb-6"
           icon={<PlusOutlined />}
           onClick={() => showModalAddEdit('')}
           type="primary"
           size="large"
+          className="rounded-xl"
         >
           Tambah Mata Pelajaran
         </Button>
-        <div className="grid grid-cols-3 gap-6">
-          {loadingSubjects && <Spin />}
-          {subjects?.map((subject) => (
-            <Card
-              key={subject.id}
-              title={
-                <Tooltip title={subject.name.length > 15 ? subject.name : null}>
-                  <div className="flex items-center text-xl font-bold">
-                    <BookOutlined className="mr-2" />
-                    {truncateText(subject.name, 20)}
-                  </div>
-                </Tooltip>
-              }
-              className="rounded-lg border border-gray-200 bg-white shadow-lg transition-shadow hover:shadow-xl"
-              extra={
-                <div>
-                  <Tooltip title="Edit" placement="topRight">
-                    <Button
-                      type="link"
-                      icon={<EditOutlined />}
-                      onClick={() => showModalAddEdit(subject.id, subject)}
-                    />
-                  </Tooltip>
-                  <Tooltip title="Hapus" placement="topRight">
-                    <Popconfirm
-                      title="Yakin ingin hapus?"
-                      onConfirm={() => onDelete(subject.id)}
-                      okText="Ya"
-                      cancelText="Tidak"
-                    >
-                      <Button type="link" danger icon={<DeleteOutlined />} />
-                    </Popconfirm>
-                  </Tooltip>
-                </div>
-              }
+      </div>
+
+      {/* Grid */}
+      {loadingSubjects ? (
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {[1, 2, 3].map((i) => (
+            <div
+              key={i}
+              className="rounded-2xl border border-gray-100 bg-white p-5 shadow-md"
             >
-              <div className="col-span-2">
-                <p className="text-center font-bold">
-                  Deskripsi Mata Pelajaran:
-                </p>
-                <div className="mt-2 flex justify-center">
-                  {subject.description}
+              <Skeleton active />
+            </div>
+          ))}
+        </div>
+      ) : (subjects?.length ?? 0) === 0 ? (
+        <Empty description="Belum ada mata pelajaran" />
+      ) : (
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {subjects?.map((subject) => {
+            const teacherCount = subject.teacher?.length ?? 0;
+            const visibleTeachers = subject.teacher?.slice(0, 3) ?? [];
+            const extraTeachers = teacherCount - 3;
+            return (
+              <div
+                key={subject.id}
+                className="flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-md transition-all hover:-translate-y-0.5 hover:shadow-lg"
+              >
+                {/* Card header */}
+                <div className="flex items-start justify-between px-5 py-4">
+                  <div className="min-w-0 flex-1 pr-2">
+                    <div className="mb-1 flex items-center gap-2">
+                      <BookOutlined />
+                      <span className="text-xs font-semibold tracking-wider text-gray-500 uppercase">
+                        Mata Pelajaran
+                      </span>
+                    </div>
+                    <h2 className="line-clamp-2 text-xl leading-tight font-bold text-gray-800">
+                      {subject.name}
+                    </h2>
+                  </div>
+                  <div className="flex shrink-0 gap-1">
+                    <Tooltip title="Edit">
+                      <button
+                        onClick={() => showModalAddEdit(subject.id, subject)}
+                        className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-500/20 text-blue-500 transition hover:bg-blue-500/80"
+                      >
+                        <EditOutlined />
+                      </button>
+                    </Tooltip>
+                    <Tooltip title="Hapus">
+                      <Popconfirm
+                        title="Yakin ingin hapus mata pelajaran ini?"
+                        onConfirm={() => onDelete(subject.id)}
+                        okText="Hapus"
+                        cancelText="Batal"
+                        okButtonProps={{ danger: true }}
+                      >
+                        <button className="flex h-8 w-8 items-center justify-center rounded-lg bg-red-500/20 text-red-500 transition hover:bg-red-500/80">
+                          <DeleteOutlined />
+                        </button>
+                      </Popconfirm>
+                    </Tooltip>
+                  </div>
                 </div>
-              </div>
-              <Divider />
-              <div className="col-span-2">
-                <p className="text-center font-bold">Guru Mata Pelajaran:</p>
-                <div className="mt-2 flex justify-center gap-2">
-                  {subject.teacher?.length ? (
-                    subject.teacher?.map((t) => (
-                      <Tag key={t.id} color="blue">
-                        {t.name}
-                      </Tag>
-                    ))
+
+                {/* Body */}
+                <div className="flex flex-1 flex-col gap-4 p-5">
+                  {subject.description && (
+                    <p className="line-clamp-2 text-sm text-gray-500">
+                      {subject.description}
+                    </p>
+                  )}
+
+                  {/* Stats row */}
+                  <div className="grid grid-cols-2 divide-x divide-gray-100 rounded-xl border border-gray-100 bg-gray-50">
+                    <div className="flex flex-col items-center py-3">
+                      <BookOutlined className="text-teal-500" />
+                      <span className="mt-1 text-xs text-gray-400">
+                        Mata Pelajaran
+                      </span>
+                      <span className="mt-0.5 max-w-20 truncate text-center text-xs font-semibold text-gray-700">
+                        {subject.name}
+                      </span>
+                    </div>
+                    <div className="flex flex-col items-center py-3">
+                      <UserOutlined className="text-blue-500" />
+                      <span className="mt-1 text-xs text-gray-400">Guru</span>
+                      <span className="mt-0.5 text-lg font-bold text-gray-800">
+                        {teacherCount}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Teacher tags */}
+                  {teacherCount > 0 ? (
+                    <div className="flex flex-wrap gap-1.5">
+                      {visibleTeachers.map((t) => (
+                        <Tag
+                          key={t.id}
+                          color="blue"
+                          className="m-0 rounded-full text-xs"
+                        >
+                          {t.name}
+                        </Tag>
+                      ))}
+                      {extraTeachers > 0 && (
+                        <Tag
+                          color="default"
+                          className="m-0 rounded-full text-xs"
+                        >
+                          +{extraTeachers} lagi
+                        </Tag>
+                      )}
+                    </div>
                   ) : (
-                    <p className="text-center">
-                      Belum ada guru yang mengajar mata pelajaran ini
+                    <p className="text-xs text-gray-400">
+                      Belum ada guru yang mengajar
                     </p>
                   )}
                 </div>
               </div>
-            </Card>
-          ))}
+            );
+          })}
         </div>
-      </div>
+      )}
       <Modal
         title={keyEdit ? 'Edit Mata Pelajaran' : 'Tambah Mata Pelajaran'}
         open={open}

@@ -36,7 +36,7 @@ const LoginPage = () => {
   return (
     <>
       <Header showLogin={false} />
-      <div className="from-primary-light to-primary-dark flex min-h-screen items-center justify-center bg-gradient-to-r">
+      <div className="from-primary-light to-primary-dark flex min-h-screen items-center justify-center bg-linear-to-r">
         <div className="w-full max-w-md space-y-6 rounded bg-white p-8 shadow-md">
           <h1 className="text-center text-2xl font-bold">Halaman Login</h1>
           <Form

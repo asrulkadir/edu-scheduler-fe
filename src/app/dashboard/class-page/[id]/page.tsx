@@ -2,25 +2,63 @@
 
 import { useClassById, useUpdateClass } from '@/hooks/useClass';
 import {
+  Badge,
   Button,
-  Descriptions,
-  DescriptionsProps,
+  Empty,
   Form,
   Input,
-  message,
   Modal,
   Select,
   Skeleton,
   Tag,
 } from 'antd';
-import { EditOutlined } from '@ant-design/icons';
-import { useState } from 'react';
+import {
+  ArrowLeftOutlined,
+  BookOutlined,
+  CalendarOutlined,
+  ClockCircleOutlined,
+  EditOutlined,
+  TeamOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
+import { useContext, useState } from 'react';
 import { TClass, TUpdateClassRequest } from '@/libs/types/class';
 import { useTeacher } from '@/hooks/useTeacher';
 import { useSubjects } from '@/hooks/useSubjects';
 import { useStudents } from '@/hooks/useStudent';
 import SelectComp from '@/components/Select';
 import Link from 'next/link';
+import { useMessage } from '@/hooks/useMessage';
+import { UserContext } from '@/context/UserContext';
+import { useSubjectsSchedule } from '@/hooks/useSubjectsSchedule';
+import {
+  DAY_LABELS,
+  TDay,
+  TSubjectsSchedule,
+} from '@/libs/types/subjectsSchedule';
+import dayjs from 'dayjs';
+
+const DAY_ORDER: TDay[] = [
+  'monday',
+  'tuesday',
+  'wednesday',
+  'thursday',
+  'friday',
+  'saturday',
+  'sunday',
+];
+
+const DAY_COLORS: Record<TDay, string> = {
+  monday: 'blue',
+  tuesday: 'cyan',
+  wednesday: 'green',
+  thursday: 'orange',
+  friday: 'purple',
+  saturday: 'magenta',
+  sunday: 'red',
+};
+
+const TIME_FORMAT = 'HH:mm';
 
 export default function Page({
   params,
@@ -29,11 +67,28 @@ export default function Page({
 }) {
   const [form] = Form.useForm();
   const [open, setOpen] = useState(false);
+  const message = useMessage();
+  const { academic } = useContext(UserContext);
   const { classData, mutate, loadingClassById } = useClassById(params.id);
   const { updateClass, loadingUpdateClass } = useUpdateClass();
   const { teachers, loadingTeachers } = useTeacher();
   const { subjects, loadingSubjects } = useSubjects();
   const { students, loadingStudents } = useStudents();
+  const { subjectsSchedule, loadingSubjectsSchedule } = useSubjectsSchedule(
+    academic?.id,
+  );
+
+  const classSchedule: TSubjectsSchedule[] = (subjectsSchedule ?? []).filter(
+    (s) => s.class?.id === params.id,
+  );
+
+  const scheduleByDay = DAY_ORDER.reduce(
+    (acc, day) => {
+      acc[day] = classSchedule.filter((s) => s.day === day);
+      return acc;
+    },
+    {} as Record<TDay, TSubjectsSchedule[]>,
+  );
 
   const showModalEdit = (data?: TClass) => {
     setOpen(true);
@@ -50,13 +105,8 @@ export default function Page({
     }
   };
 
-  const handleOk = () => {
-    form.submit();
-  };
-
-  const handleCancel = () => {
-    setOpen(false);
-  };
+  const handleOk = () => form.submit();
+  const handleCancel = () => setOpen(false);
 
   const onFinish = (values: TUpdateClassRequest) => {
     const filteredValue = Object.fromEntries(
@@ -65,10 +115,7 @@ export default function Page({
       ),
     );
     updateClass(
-      {
-        ...filteredValue,
-        id: params.id,
-      },
+      { ...filteredValue, id: params.id },
       {
         onError: (error) => {
           message.error(error.message);
@@ -83,82 +130,222 @@ export default function Page({
     );
   };
 
-  const items: DescriptionsProps['items'] = [
-    {
-      key: '1',
-      label: 'Nama Kelas',
-      children: classData?.name,
-    },
-    {
-      key: '2',
-      label: 'Deskripsi',
-      children: classData?.description,
-    },
-    {
-      key: '3',
-      label: 'Wali Kelas',
-      children: classData?.homeroomTeacher?.name,
-    },
-    {
-      key: '4',
-      label: `Siswa (${classData?.students?.length})`,
-      children: (
-        <div>
-          {classData?.students?.map((student) => (
-            <Tag color="blue" key={student.id}>
-              {student.name}
-            </Tag>
-          ))}
+  if (loadingClassById) {
+    return (
+      <div className="space-y-6">
+        <Skeleton active paragraph={{ rows: 2 }} />
+        <div className="grid grid-cols-3 gap-4">
+          <Skeleton active />
+          <Skeleton active />
+          <Skeleton active />
         </div>
-      ),
-    },
-    {
-      key: '5',
-      label: 'Mata Pelajaran',
-      children: (
-        <div>
-          {classData?.subjects?.map((subject) => (
-            <Tag color="blue" key={subject.id}>
-              {subject.name}
-            </Tag>
-          ))}
-        </div>
-      ),
-    },
-  ];
+        <Skeleton active paragraph={{ rows: 4 }} />
+      </div>
+    );
+  }
+
   return (
     <>
-      {loadingClassById ? (
-        <Skeleton active />
-      ) : (
-        <div>
-          <Descriptions
-            title={
-              <div>
-                <h1 className="mb-6 text-2xl font-extrabold text-gray-800">
-                  <Link href="/dashboard/class-page">Kelas</Link> /{' '}
-                  {classData?.name}
-                </h1>
-                <Button
-                  className="mb-6"
-                  icon={<EditOutlined />}
-                  onClick={() => showModalEdit(classData)}
-                  type="primary"
-                  size="large"
-                >
-                  Edit Kelas
-                </Button>
-              </div>
-            }
-            items={items}
-          />
-          <div className="mt-6">
-            <h2 className="mb-6 text-xl font-extrabold text-gray-800">
-              Jadwal Pelajaran
-            </h2>
+      {/* Breadcrumb + Edit button */}
+      <div className="mb-6 flex items-center justify-between">
+        <div className="flex items-center gap-2 text-sm text-gray-500">
+          <Link
+            href="/dashboard/class-page"
+            className="flex items-center gap-1 font-medium text-blue-600 hover:underline"
+          >
+            <ArrowLeftOutlined /> Kelas
+          </Link>
+          <span>/</span>
+          <span className="font-semibold text-gray-800">{classData?.name}</span>
+        </div>
+        <Button
+          icon={<EditOutlined />}
+          onClick={() => showModalEdit(classData)}
+          type="primary"
+          className="rounded-xl"
+        >
+          Edit Kelas
+        </Button>
+      </div>
+
+      {/* Hero banner */}
+      <div className="mb-6 overflow-hidden rounded-2xl bg-linear-to-r from-blue-800 to-blue-500 shadow-lg">
+        <div className="px-8 py-6">
+          <div className="mb-1 flex items-center gap-2">
+            <BookOutlined className="text-white/70" />
+            <span className="text-xs font-semibold tracking-wider text-white/70 uppercase">
+              Detail Kelas
+            </span>
+          </div>
+          <h1 className="text-3xl font-extrabold text-white">
+            {classData?.name}
+          </h1>
+          {classData?.description && (
+            <p className="mt-2 text-blue-100">{classData.description}</p>
+          )}
+        </div>
+      </div>
+
+      {/* Stats cards */}
+      <div className="mb-6 grid grid-cols-3 gap-4">
+        <div className="flex items-center gap-4 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-blue-100">
+            <UserOutlined className="text-xl text-blue-600" />
+          </div>
+          <div className="min-w-0">
+            <p className="text-xs text-gray-400">Wali Kelas</p>
+            <p className="truncate font-semibold text-gray-800">
+              {classData?.homeroomTeacher?.name ?? '-'}
+            </p>
           </div>
         </div>
-      )}
+        <div className="flex items-center gap-4 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-indigo-100">
+            <TeamOutlined className="text-xl text-indigo-600" />
+          </div>
+          <div>
+            <p className="text-xs text-gray-400">Total Siswa</p>
+            <p className="text-2xl font-extrabold text-gray-800">
+              {classData?.students?.length ?? 0}
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center gap-4 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-teal-100">
+            <BookOutlined className="text-xl text-teal-600" />
+          </div>
+          <div>
+            <p className="text-xs text-gray-400">Mata Pelajaran</p>
+            <p className="text-2xl font-extrabold text-gray-800">
+              {classData?.subjects?.length ?? 0}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Content grid */}
+      <div className="grid grid-cols-5 gap-6">
+        {/* Left: Students + Subjects */}
+        <div className="col-span-2 space-y-6">
+          <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+            <h3 className="mb-3 flex items-center gap-2 font-bold text-gray-700">
+              <TeamOutlined className="text-indigo-500" />
+              Siswa
+              <Badge
+                count={classData?.students?.length ?? 0}
+                color="blue"
+                showZero
+              />
+            </h3>
+            {(classData?.students?.length ?? 0) === 0 ? (
+              <Empty
+                description="Belum ada siswa"
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+              />
+            ) : (
+              <div className="flex flex-wrap gap-1.5">
+                {classData?.students?.map((s) => (
+                  <Tag key={s.id} color="blue" className="m-0 rounded-full">
+                    {s.name}
+                  </Tag>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+            <h3 className="mb-3 flex items-center gap-2 font-bold text-gray-700">
+              <BookOutlined className="text-teal-500" />
+              Mata Pelajaran
+              <Badge
+                count={classData?.subjects?.length ?? 0}
+                color="cyan"
+                showZero
+              />
+            </h3>
+            {(classData?.subjects?.length ?? 0) === 0 ? (
+              <Empty
+                description="Belum ada mata pelajaran"
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+              />
+            ) : (
+              <div className="flex flex-wrap gap-1.5">
+                {classData?.subjects?.map((s) => (
+                  <Tag key={s.id} color="cyan" className="m-0 rounded-full">
+                    {s.name}
+                  </Tag>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Right: Schedule */}
+        <div className="col-span-3 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+          <h3 className="mb-4 flex items-center gap-2 font-bold text-gray-700">
+            <CalendarOutlined className="text-purple-500" />
+            Jadwal Pelajaran
+            <Badge count={classSchedule.length} color="purple" showZero />
+          </h3>
+
+          {loadingSubjectsSchedule ? (
+            <Skeleton active />
+          ) : classSchedule.length === 0 ? (
+            <Empty
+              description={
+                academic?.id
+                  ? 'Belum ada jadwal untuk kelas ini'
+                  : 'Pilih kalender akademik terlebih dahulu'
+              }
+              image={Empty.PRESENTED_IMAGE_SIMPLE}
+            />
+          ) : (
+            <div className="space-y-5">
+              {DAY_ORDER.filter((day) => scheduleByDay[day].length > 0).map(
+                (day) => (
+                  <div key={day}>
+                    <div className="mb-2 flex items-center gap-3">
+                      <Tag
+                        color={DAY_COLORS[day]}
+                        className="rounded-full text-sm font-semibold"
+                      >
+                        {DAY_LABELS[day]}
+                      </Tag>
+                      <div className="h-px flex-1 bg-gray-100" />
+                    </div>
+                    <div className="space-y-2 pl-2">
+                      {scheduleByDay[day].map((s) => (
+                        <div
+                          key={s.id}
+                          className="flex items-center gap-3 rounded-xl border border-gray-100 bg-gray-50 px-4 py-3"
+                        >
+                          <ClockCircleOutlined className="shrink-0 text-gray-400" />
+                          <span className="w-24 shrink-0 font-mono text-sm font-semibold text-gray-700">
+                            {dayjs(s.startTime).format(TIME_FORMAT)}
+                            {' – '}
+                            {dayjs(s.endTime).format(TIME_FORMAT)}
+                          </span>
+                          <Tag color="blue" className="m-0 shrink-0">
+                            {s.subject?.name}
+                          </Tag>
+                          {s.teacher && (
+                            <span className="text-sm text-gray-500">
+                              <UserOutlined className="mr-1" />
+                              {s.teacher.name}
+                            </span>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ),
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Edit Modal */}
       <Modal
         title="Edit Kelas"
         open={open}
@@ -223,7 +410,6 @@ export default function Page({
               showSearch
               filterOption={(input, option) =>
                 String(option?.label ?? '')
-                  .toString()
                   .toLowerCase()
                   .includes(input.toLowerCase())
               }
@@ -241,7 +427,6 @@ export default function Page({
               showSearch
               filterOption={(input, option) =>
                 String(option?.label ?? '')
-                  .toString()
                   .toLowerCase()
                   .includes(input.toLowerCase())
               }

@@ -2,17 +2,26 @@
 
 import {
   Button,
+  Empty,
   Form,
   Modal,
   Popconfirm,
   Select,
-  Spin,
-  Table,
+  Skeleton,
+  Tag,
   TimePicker,
   Tooltip,
 } from 'antd';
 import { useMessage } from '@/hooks/useMessage';
-import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import {
+  PlusOutlined,
+  EditOutlined,
+  DeleteOutlined,
+  ClockCircleOutlined,
+  UserOutlined,
+  BookOutlined,
+  HomeOutlined,
+} from '@ant-design/icons';
 import {
   useSubjectsSchedule,
   useCreateSubjectsSchedule,
@@ -33,6 +42,16 @@ import { UserContext } from '@/context/UserContext';
 import { ERole } from '@/libs/utils/enum';
 import dayjs from 'dayjs';
 
+const DAY_ORDER: TDay[] = [
+  'monday',
+  'tuesday',
+  'wednesday',
+  'thursday',
+  'friday',
+  'saturday',
+  'sunday',
+];
+
 const DAY_OPTIONS: { value: TDay; label: string }[] = [
   { value: 'monday', label: 'Senin' },
   { value: 'tuesday', label: 'Selasa' },
@@ -42,6 +61,36 @@ const DAY_OPTIONS: { value: TDay; label: string }[] = [
   { value: 'saturday', label: 'Sabtu' },
   { value: 'sunday', label: 'Minggu' },
 ];
+
+const DAY_COLORS: Record<TDay, string> = {
+  monday: 'blue',
+  tuesday: 'cyan',
+  wednesday: 'green',
+  thursday: 'orange',
+  friday: 'purple',
+  saturday: 'magenta',
+  sunday: 'red',
+};
+
+const DAY_BG: Record<TDay, string> = {
+  monday: '#EFF6FF',
+  tuesday: '#ECFEFF',
+  wednesday: '#F0FDF4',
+  thursday: '#FFF7ED',
+  friday: '#FAF5FF',
+  saturday: '#FFF0F6',
+  sunday: '#FFF1F0',
+};
+
+const DAY_BORDER: Record<TDay, string> = {
+  monday: '#BFDBFE',
+  tuesday: '#A5F3FC',
+  wednesday: '#A7F3D0',
+  thursday: '#FED7AA',
+  friday: '#DDD6FE',
+  saturday: '#F9A8D4',
+  sunday: '#FCA5A5',
+};
 
 const TIME_FORMAT = 'HH:mm';
 
@@ -71,6 +120,16 @@ const Page = () => {
   const filteredTeachers = selectedSubjectId
     ? (subjects?.find((s) => s.id === selectedSubjectId)?.teacher ?? [])
     : [];
+
+  const scheduleByDay = DAY_ORDER.reduce(
+    (acc, day) => {
+      acc[day] = (subjectsSchedule ?? []).filter((s) => s.day === day);
+      return acc;
+    },
+    {} as Record<TDay, TSubjectsSchedule[]>,
+  );
+
+  const daysWithSchedule = DAY_ORDER.filter((d) => scheduleByDay[d].length > 0);
 
   const showModalAddEdit = (editId: string, data?: TSubjectsSchedule) => {
     setOpen(true);
@@ -166,106 +225,165 @@ const Page = () => {
     );
   };
 
-  const columns = [
-    {
-      title: 'Mata Pelajaran',
-      dataIndex: ['subject', 'name'],
-      key: 'subject',
-    },
-    {
-      title: 'Kelas',
-      dataIndex: ['class', 'name'],
-      key: 'class',
-    },
-    {
-      title: 'Hari',
-      dataIndex: 'day',
-      key: 'day',
-      render: (day: TDay) => DAY_LABELS[day] ?? day,
-    },
-    {
-      title: 'Jam Mulai',
-      dataIndex: 'startTime',
-      key: 'startTime',
-      render: (time: string) => (time ? dayjs(time).format(TIME_FORMAT) : '-'),
-    },
-    {
-      title: 'Jam Selesai',
-      dataIndex: 'endTime',
-      key: 'endTime',
-      render: (time: string) => (time ? dayjs(time).format(TIME_FORMAT) : '-'),
-    },
-    {
-      title: 'Guru',
-      dataIndex: ['teacher', 'name'],
-      key: 'teacher',
-      render: (name: string) => name ?? '-',
-    },
-    {
-      title: 'Tahun Akademik',
-      dataIndex: ['academicCalendar', 'name'],
-      key: 'academicCalendar',
-    },
-    ...(canManage
-      ? [
-          {
-            title: 'Aksi',
-            key: 'action',
-            render: (_: unknown, record: TSubjectsSchedule) => (
-              <div className="flex gap-2">
-                <Tooltip title="Edit">
-                  <Button
-                    type="link"
-                    icon={<EditOutlined />}
-                    onClick={() => showModalAddEdit(record.id, record)}
-                  />
-                </Tooltip>
-                <Tooltip title="Hapus">
-                  <Popconfirm
-                    title="Yakin ingin menghapus jadwal ini?"
-                    onConfirm={() => onDelete(record.id)}
-                    okText="Ya"
-                    cancelText="Tidak"
-                  >
-                    <Button type="link" danger icon={<DeleteOutlined />} />
-                  </Popconfirm>
-                </Tooltip>
-              </div>
-            ),
-          },
-        ]
-      : []),
-  ];
-
   return (
     <>
-      <div>
-        <h1 className="mb-6 text-2xl font-extrabold text-gray-800">
-          Jadwal Mata Pelajaran
-        </h1>
+      {/* Page header */}
+      <div className="mb-6 flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-extrabold text-gray-800">
+            Jadwal Mata Pelajaran
+          </h1>
+          <p className="text-sm text-gray-500">
+            {subjectsSchedule?.length ?? 0} jadwal terdaftar
+          </p>
+        </div>
         {canManage && (
           <Button
-            className="mb-6"
             icon={<PlusOutlined />}
             onClick={() => showModalAddEdit('')}
             type="primary"
             size="large"
+            className="rounded-xl"
           >
             Tambah Jadwal
           </Button>
         )}
-        {loadingSubjectsSchedule ? (
-          <Spin />
-        ) : (
-          <Table
-            dataSource={subjectsSchedule ?? []}
-            columns={columns}
-            rowKey="id"
-            pagination={{ pageSize: 10 }}
-            scroll={{ x: true }}
-          />
-        )}
       </div>
+
+      {/* Day summary pills */}
+      {!loadingSubjectsSchedule && (subjectsSchedule?.length ?? 0) > 0 && (
+        <div className="mb-6 flex flex-wrap gap-2">
+          {DAY_ORDER.map((day) => {
+            const count = scheduleByDay[day].length;
+            if (!count) return null;
+            return (
+              <Tag
+                key={day}
+                color={DAY_COLORS[day]}
+                className="rounded-full px-3 py-0.5 text-sm font-semibold"
+              >
+                {DAY_LABELS[day]} · {count}
+              </Tag>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Content */}
+      {loadingSubjectsSchedule ? (
+        <div className="space-y-4">
+          <Skeleton active />
+          <Skeleton active />
+        </div>
+      ) : (subjectsSchedule?.length ?? 0) === 0 ? (
+        <Empty
+          description={
+            academic?.id
+              ? 'Belum ada jadwal'
+              : 'Pilih kalender akademik terlebih dahulu'
+          }
+        />
+      ) : (
+        <div className="space-y-8">
+          {daysWithSchedule.map((day) => (
+            <div key={day}>
+              {/* Day header */}
+              <div className="mb-3 flex items-center gap-3">
+                <Tag
+                  color={DAY_COLORS[day]}
+                  className="rounded-full px-4 py-1 text-sm font-bold"
+                >
+                  {DAY_LABELS[day]}
+                </Tag>
+                <span className="text-sm text-gray-400">
+                  {scheduleByDay[day].length} jadwal
+                </span>
+                <div className="h-px flex-1 bg-gray-100" />
+              </div>
+
+              {/* Schedule cards */}
+              <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
+                {scheduleByDay[day].map((item) => (
+                  <div
+                    key={item.id}
+                    className="relative overflow-hidden rounded-2xl border p-4 transition-all hover:-translate-y-0.5 hover:shadow-md"
+                    style={{
+                      background: DAY_BG[day],
+                      borderColor: DAY_BORDER[day],
+                    }}
+                  >
+                    {/* Time */}
+                    <div className="mb-3 flex items-center gap-2">
+                      <ClockCircleOutlined className="text-gray-400" />
+                      <span className="font-mono text-sm font-bold text-gray-700">
+                        {dayjs(item.startTime).format(TIME_FORMAT)}
+                        {' – '}
+                        {dayjs(item.endTime).format(TIME_FORMAT)}
+                      </span>
+                    </div>
+
+                    {/* Subject */}
+                    <div className="mb-1.5 flex items-center gap-2">
+                      <BookOutlined className="shrink-0 text-blue-400" />
+                      <span className="font-semibold text-gray-800">
+                        {item.subject?.name}
+                      </span>
+                    </div>
+
+                    {/* Class */}
+                    <div className="mb-1.5 flex items-center gap-2">
+                      <HomeOutlined className="shrink-0 text-gray-400" />
+                      <span className="text-sm text-gray-600">
+                        {item.class?.name}
+                      </span>
+                    </div>
+
+                    {/* Teacher */}
+                    {item.teacher && (
+                      <div className="flex items-center gap-2">
+                        <UserOutlined className="shrink-0 text-gray-400" />
+                        <span className="text-sm text-gray-600">
+                          {item.teacher.name}
+                        </span>
+                      </div>
+                    )}
+
+                    {/* Action buttons */}
+                    {canManage && (
+                      <div className="absolute top-3 right-3 flex gap-1">
+                        <Tooltip title="Edit">
+                          <Button
+                            size="small"
+                            type="text"
+                            icon={<EditOutlined />}
+                            onClick={() => showModalAddEdit(item.id, item)}
+                          />
+                        </Tooltip>
+                        <Tooltip title="Hapus">
+                          <Popconfirm
+                            title="Yakin ingin menghapus jadwal ini?"
+                            onConfirm={() => onDelete(item.id)}
+                            okText="Hapus"
+                            cancelText="Batal"
+                            okButtonProps={{ danger: true }}
+                          >
+                            <Button
+                              size="small"
+                              type="text"
+                              danger
+                              icon={<DeleteOutlined />}
+                            />
+                          </Popconfirm>
+                        </Tooltip>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
 
       <Modal
         title={

@@ -14,7 +14,7 @@ export const routes = [
     href: '/dashboard/teaching-schedule',
     scope: {
       create: ['ADMIN', 'SUPERADMIN'],
-      read: ['ADMIN', 'TEACHER', 'STUDENT', 'SUPERADMIN'],
+      read: ['ADMIN', 'TEACHER', 'SUPERADMIN'],
       update: ['ADMIN', 'SUPERADMIN'],
       delete: ['ADMIN', 'SUPERADMIN'],
     },
@@ -87,6 +87,16 @@ export const routes = [
       read: ['ADMIN', 'SUPERADMIN'],
       update: ['ADMIN', 'SUPERADMIN'],
       delete: ['ADMIN', 'SUPERADMIN'],
+    },
+  },
+  {
+    name: 'Profil',
+    href: '/dashboard/profile',
+    scope: {
+      create: [],
+      read: ['ADMIN', 'TEACHER', 'STUDENT', 'SUPERADMIN'],
+      update: ['ADMIN', 'TEACHER', 'STUDENT', 'SUPERADMIN'],
+      delete: [],
     },
   },
 ];

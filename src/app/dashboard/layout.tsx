@@ -6,22 +6,26 @@ import HeaderDashboard from '@/components/HeaderDashboard';
 
 const { Sider, Content } = Layout;
 
-function DashboardLayout({
-  children, // will be a page or nested layout
-}: {
-  readonly children: React.ReactNode;
-}) {
+function DashboardLayout({ children }: { readonly children: React.ReactNode }) {
   return (
     <UserContextProvider>
-      <Layout>
-        <Sider className="bg-primary-dark text-white">
+      <Layout className="min-h-screen">
+        <Sider
+          width={220}
+          style={{
+            background: '#1a2e4a',
+            position: 'sticky',
+            top: 0,
+            height: '100vh',
+            overflow: 'auto',
+            flexShrink: 0,
+          }}
+        >
           <NavComp />
         </Sider>
-        <Layout>
+        <Layout style={{ background: '#f5f7fa' }}>
           <HeaderDashboard />
-          <Content className="flex min-h-screen flex-col bg-white p-8">
-            {children}
-          </Content>
+          <Content className="min-h-screen p-6 md:p-8">{children}</Content>
         </Layout>
       </Layout>
     </UserContextProvider>
