@@ -10,7 +10,6 @@ import {
   Popconfirm,
   Select,
   Skeleton,
-  Tag,
   Tooltip,
 } from 'antd';
 import {
@@ -19,7 +18,6 @@ import {
   DeleteOutlined,
   BookOutlined,
   UserOutlined,
-  TeamOutlined,
 } from '@ant-design/icons';
 import {
   useClass,
@@ -34,7 +32,6 @@ import {
 } from '@/libs/types/class';
 import { useTeacher } from '@/hooks/useTeacher';
 import { useSubjects } from '@/hooks/useSubjects';
-import { useStudents } from '@/hooks/useStudent';
 import SelectComp from '@/components/Select';
 import { useRouter } from 'next/navigation';
 import { useMessage } from '@/hooks/useMessage';
@@ -51,7 +48,6 @@ const Page = () => {
   const { deleteClass } = useDeleteClass();
   const { teachers, loadingTeachers } = useTeacher();
   const { subjects, loadingSubjects } = useSubjects();
-  const { students, loadingStudents } = useStudents();
 
   const showModalAddEdit = (isEditable: string, data?: TClass) => {
     setOpen(true);
@@ -62,7 +58,6 @@ const Page = () => {
         description: data.description,
         homeroomTeacherId: data.homeroomTeacherId,
         subjects: data.subjects?.map((item) => item.id),
-        students: data.students?.map((item) => item.id),
       });
     } else {
       form.resetFields();
@@ -172,9 +167,6 @@ const Page = () => {
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {classesData?.map((classData) => {
             const subjectCount = classData.subjects?.length ?? 0;
-            const studentCount = classData.students?.length ?? 0;
-            const visibleSubjects = classData.subjects?.slice(0, 3) ?? [];
-            const extraSubjects = subjectCount - 3;
             return (
               <div
                 key={classData.id}
@@ -194,14 +186,14 @@ const Page = () => {
                   </div>
                   <div className="flex shrink-0 gap-1">
                     <Tooltip title="Edit">
-                      <button
+                      <Button
                         onClick={() =>
                           showModalAddEdit(classData.id, classData)
                         }
                         className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-500/20 text-blue-500 transition hover:bg-blue-500/80"
                       >
                         <EditOutlined />
-                      </button>
+                      </Button>
                     </Tooltip>
                     <Tooltip title="Hapus">
                       <Popconfirm
@@ -211,9 +203,9 @@ const Page = () => {
                         cancelText="Batal"
                         okButtonProps={{ danger: true }}
                       >
-                        <button className="flex h-8 w-8 items-center justify-center rounded-lg bg-red-500/20 text-red-500 transition hover:bg-red-500/80">
+                        <Button className="flex h-8 w-8 items-center justify-center rounded-lg bg-red-500/20 text-red-500 transition hover:bg-red-500/80">
                           <DeleteOutlined />
-                        </button>
+                        </Button>
                       </Popconfirm>
                     </Tooltip>
                   </div>
@@ -221,14 +213,8 @@ const Page = () => {
 
                 {/* Body */}
                 <div className="flex flex-1 flex-col gap-4 p-5">
-                  {classData.description && (
-                    <p className="line-clamp-2 text-sm text-gray-500">
-                      {classData.description}
-                    </p>
-                  )}
-
                   {/* Stats row */}
-                  <div className="grid grid-cols-3 divide-x divide-gray-100 rounded-xl border border-gray-100 bg-gray-50">
+                  <div className="grid grid-cols-2 divide-x divide-gray-100 rounded-xl border border-gray-100 bg-gray-50">
                     <div className="flex flex-col items-center py-3">
                       <UserOutlined className="text-blue-500" />
                       <span className="mt-1 text-xs text-gray-400">
@@ -236,13 +222,6 @@ const Page = () => {
                       </span>
                       <span className="mt-0.5 max-w-18 truncate text-center text-xs font-semibold text-gray-700">
                         {classData.homeroomTeacher?.name ?? '-'}
-                      </span>
-                    </div>
-                    <div className="flex flex-col items-center py-3">
-                      <TeamOutlined className="text-indigo-500" />
-                      <span className="mt-1 text-xs text-gray-400">Siswa</span>
-                      <span className="mt-0.5 text-lg font-bold text-gray-800">
-                        {studentCount}
                       </span>
                     </div>
                     <div className="flex flex-col items-center py-3">
@@ -254,38 +233,15 @@ const Page = () => {
                     </div>
                   </div>
 
-                  {/* Subject tags */}
-                  {subjectCount > 0 && (
-                    <div className="flex flex-wrap gap-1.5">
-                      {visibleSubjects.map((s) => (
-                        <Tag
-                          key={s.id}
-                          color="blue"
-                          className="m-0 rounded-full text-xs"
-                        >
-                          {s.name}
-                        </Tag>
-                      ))}
-                      {extraSubjects > 0 && (
-                        <Tag
-                          color="default"
-                          className="m-0 rounded-full text-xs"
-                        >
-                          +{extraSubjects} lagi
-                        </Tag>
-                      )}
-                    </div>
-                  )}
-
                   {/* Detail CTA */}
-                  <button
+                  <Button
                     onClick={() =>
                       router.push(`/dashboard/class-page/${classData.id}`)
                     }
                     className="mt-auto w-full rounded-xl border border-blue-100 bg-blue-50 py-2 text-sm font-semibold text-blue-600 transition hover:bg-blue-100"
                   >
                     Lihat Detail →
-                  </button>
+                  </Button>
                 </div>
               </div>
             );
@@ -358,26 +314,6 @@ const Page = () => {
               }))}
               placeholder="Pilih mata pelajaran"
               loading={loadingSubjects}
-              showSearch={{
-                filterOption: (input, option) =>
-                  String(option?.label ?? '')
-                    .toLowerCase()
-                    .includes(input.toLowerCase()),
-              }}
-            />
-          </Form.Item>
-          <Form.Item<TCreateClassRequest | TUpdateClassRequest>
-            name="students"
-            label="Siswa"
-          >
-            <SelectComp
-              mode="multiple"
-              options={students?.map((item) => ({
-                value: item.id,
-                label: item.name,
-              }))}
-              placeholder="Pilih siswa"
-              loading={loadingStudents}
               showSearch={{
                 filterOption: (input, option) =>
                   String(option?.label ?? '')

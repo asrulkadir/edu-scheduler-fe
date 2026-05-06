@@ -24,8 +24,8 @@ export const routes = [
     href: '/dashboard/subjects-schedule',
     scope: {
       create: ['ADMIN', 'SUPERADMIN'],
-      read: ['ADMIN', 'TEACHER', 'STUDENT', 'SUPERADMIN'],
-      update: ['ADMIN', 'TEACHER', 'SUPERADMIN'],
+      read: ['ADMIN', 'SUPERADMIN'],
+      update: ['ADMIN', 'SUPERADMIN'],
       delete: ['ADMIN', 'SUPERADMIN'],
     },
   },
@@ -52,16 +52,6 @@ export const routes = [
   {
     name: 'Kelas',
     href: '/dashboard/class-page',
-    scope: {
-      create: ['ADMIN', 'SUPERADMIN'],
-      read: ['ADMIN', 'TEACHER', 'STUDENT', 'SUPERADMIN'],
-      update: ['ADMIN', 'SUPERADMIN'],
-      delete: ['ADMIN', 'SUPERADMIN'],
-    },
-  },
-  {
-    name: 'Siswa',
-    href: '/dashboard/student',
     scope: {
       create: ['ADMIN', 'SUPERADMIN'],
       read: ['ADMIN', 'TEACHER', 'STUDENT', 'SUPERADMIN'],

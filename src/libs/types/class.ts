@@ -8,7 +8,6 @@ export type TClass = {
   clientId?: string;
   homeroomTeacher?: TNameId;
   subjects?: TNameId[];
-  students?: TNameId[];
   subjectsSchedule?: {
     id: string;
     days: string;
@@ -24,7 +23,6 @@ export type TCreateClassRequest = {
   description?: string;
   homeroomTeacherId?: string;
   subjects?: string[];
-  students?: string[];
   subjectsSchedule?: string[];
 };
 
@@ -35,6 +33,5 @@ export type TUpdateClassRequest = {
   name?: string;
   homeroomTeacherId?: string;
   subjects?: string[];
-  students?: string[];
   subjectsSchedule?: string[];
 };

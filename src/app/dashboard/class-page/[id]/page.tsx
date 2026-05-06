@@ -18,14 +18,12 @@ import {
   CalendarOutlined,
   ClockCircleOutlined,
   EditOutlined,
-  TeamOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { useContext, useState } from 'react';
+import { useContext, use, useState } from 'react';
 import { TClass, TUpdateClassRequest } from '@/libs/types/class';
 import { useTeacher } from '@/hooks/useTeacher';
 import { useSubjects } from '@/hooks/useSubjects';
-import { useStudents } from '@/hooks/useStudent';
 import SelectComp from '@/components/Select';
 import Link from 'next/link';
 import { useMessage } from '@/hooks/useMessage';
@@ -63,23 +61,23 @@ const TIME_FORMAT = 'HH:mm';
 export default function Page({
   params,
 }: {
-  readonly params: { readonly id: string };
+  readonly params: Promise<{ readonly id: string }>;
 }) {
+  const { id } = use(params);
   const [form] = Form.useForm();
   const [open, setOpen] = useState(false);
   const message = useMessage();
   const { academic } = useContext(UserContext);
-  const { classData, mutate, loadingClassById } = useClassById(params.id);
+  const { classData, mutate, loadingClassById } = useClassById(id);
   const { updateClass, loadingUpdateClass } = useUpdateClass();
   const { teachers, loadingTeachers } = useTeacher();
   const { subjects, loadingSubjects } = useSubjects();
-  const { students, loadingStudents } = useStudents();
   const { subjectsSchedule, loadingSubjectsSchedule } = useSubjectsSchedule(
     academic?.id,
   );
 
   const classSchedule: TSubjectsSchedule[] = (subjectsSchedule ?? []).filter(
-    (s) => s.class?.id === params.id,
+    (s) => s.class?.id === id,
   );
 
   const scheduleByDay = DAY_ORDER.reduce(
@@ -98,7 +96,6 @@ export default function Page({
         description: data.description,
         homeroomTeacherId: data.homeroomTeacherId,
         subjects: data.subjects?.map((item) => item.id),
-        students: data.students?.map((item) => item.id),
       });
     } else {
       form.resetFields();
@@ -115,7 +112,7 @@ export default function Page({
       ),
     );
     updateClass(
-      { ...filteredValue, id: params.id },
+      { ...filteredValue, id: id },
       {
         onError: (error) => {
           message.error(error.message);
@@ -187,7 +184,7 @@ export default function Page({
       </div>
 
       {/* Stats cards */}
-      <div className="mb-6 grid grid-cols-3 gap-4">
+      <div className="mb-6 grid grid-cols-2 gap-4">
         <div className="flex items-center gap-4 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-blue-100">
             <UserOutlined className="text-xl text-blue-600" />
@@ -196,17 +193,6 @@ export default function Page({
             <p className="text-xs text-gray-400">Wali Kelas</p>
             <p className="truncate font-semibold text-gray-800">
               {classData?.homeroomTeacher?.name ?? '-'}
-            </p>
-          </div>
-        </div>
-        <div className="flex items-center gap-4 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-indigo-100">
-            <TeamOutlined className="text-xl text-indigo-600" />
-          </div>
-          <div>
-            <p className="text-xs text-gray-400">Total Siswa</p>
-            <p className="text-2xl font-extrabold text-gray-800">
-              {classData?.students?.length ?? 0}
             </p>
           </div>
         </div>
@@ -223,126 +209,102 @@ export default function Page({
         </div>
       </div>
 
-      {/* Content grid */}
-      <div className="grid grid-cols-5 gap-6">
-        {/* Left: Students + Subjects */}
-        <div className="col-span-2 space-y-6">
-          <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
-            <h3 className="mb-3 flex items-center gap-2 font-bold text-gray-700">
-              <TeamOutlined className="text-indigo-500" />
-              Siswa
-              <Badge
-                count={classData?.students?.length ?? 0}
-                color="blue"
-                showZero
-              />
-            </h3>
-            {(classData?.students?.length ?? 0) === 0 ? (
-              <Empty
-                description="Belum ada siswa"
-                image={Empty.PRESENTED_IMAGE_SIMPLE}
-              />
-            ) : (
-              <div className="flex flex-wrap gap-1.5">
-                {classData?.students?.map((s) => (
-                  <Tag key={s.id} color="blue" className="m-0 rounded-full">
-                    {s.name}
-                  </Tag>
-                ))}
-              </div>
-            )}
-          </div>
-
-          <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
-            <h3 className="mb-3 flex items-center gap-2 font-bold text-gray-700">
-              <BookOutlined className="text-teal-500" />
-              Mata Pelajaran
-              <Badge
-                count={classData?.subjects?.length ?? 0}
+      {/* Subjects - compact full-width */}
+      <div className="mb-6 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+        <h3 className="mb-3 flex items-center gap-2 font-bold text-gray-700">
+          <BookOutlined className="text-teal-500" />
+          Mata Pelajaran
+          <Badge
+            count={classData?.subjects?.length ?? 0}
+            color="cyan"
+            showZero
+          />
+        </h3>
+        {(classData?.subjects?.length ?? 0) === 0 ? (
+          <Empty
+            description="Belum ada mata pelajaran"
+            image={Empty.PRESENTED_IMAGE_SIMPLE}
+          />
+        ) : (
+          <div className="flex flex-wrap gap-2">
+            {classData?.subjects?.map((s) => (
+              <Tag
+                key={s.id}
                 color="cyan"
-                showZero
-              />
-            </h3>
-            {(classData?.subjects?.length ?? 0) === 0 ? (
-              <Empty
-                description="Belum ada mata pelajaran"
-                image={Empty.PRESENTED_IMAGE_SIMPLE}
-              />
-            ) : (
-              <div className="flex flex-wrap gap-1.5">
-                {classData?.subjects?.map((s) => (
-                  <Tag key={s.id} color="cyan" className="m-0 rounded-full">
-                    {s.name}
-                  </Tag>
-                ))}
-              </div>
+                className="m-0 rounded-full px-3 py-0.5 text-sm"
+              >
+                {s.name}
+              </Tag>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Schedule - full-width */}
+      <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+        <h3 className="mb-4 flex items-center gap-2 font-bold text-gray-700">
+          <CalendarOutlined className="text-purple-500" />
+          Jadwal Pelajaran
+          <Badge count={classSchedule.length} color="purple" showZero />
+        </h3>
+
+        {loadingSubjectsSchedule ? (
+          <Skeleton active />
+        ) : classSchedule.length === 0 ? (
+          <Empty
+            description={
+              academic?.id
+                ? 'Belum ada jadwal untuk kelas ini'
+                : 'Pilih kalender akademik terlebih dahulu'
+            }
+            image={Empty.PRESENTED_IMAGE_SIMPLE}
+          />
+        ) : (
+          <div className="space-y-6">
+            {DAY_ORDER.filter((day) => scheduleByDay[day].length > 0).map(
+              (day) => (
+                <div key={day}>
+                  <div className="mb-3 flex items-center gap-3">
+                    <Tag
+                      color={DAY_COLORS[day]}
+                      className="rounded-full text-sm font-semibold"
+                    >
+                      {DAY_LABELS[day]}
+                    </Tag>
+                    <span className="text-sm text-gray-400">
+                      {scheduleByDay[day].length} jadwal
+                    </span>
+                    <div className="h-px flex-1 bg-gray-100" />
+                  </div>
+                  <div className="grid grid-cols-1 gap-2 md:grid-cols-2 xl:grid-cols-3">
+                    {scheduleByDay[day].map((s) => (
+                      <div
+                        key={s.id}
+                        className="flex items-center gap-3 rounded-xl border border-gray-100 bg-gray-50 px-4 py-3"
+                      >
+                        <ClockCircleOutlined className="shrink-0 text-gray-400" />
+                        <span className="w-24 shrink-0 font-mono text-sm font-semibold text-gray-700">
+                          {dayjs(s.startTime).format(TIME_FORMAT)}
+                          {' – '}
+                          {dayjs(s.endTime).format(TIME_FORMAT)}
+                        </span>
+                        <Tag color="blue" className="m-0 shrink-0">
+                          {s.subject?.name}
+                        </Tag>
+                        {s.teacher && (
+                          <span className="truncate text-sm text-gray-500">
+                            <UserOutlined className="mr-1" />
+                            {s.teacher.name}
+                          </span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ),
             )}
           </div>
-        </div>
-
-        {/* Right: Schedule */}
-        <div className="col-span-3 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
-          <h3 className="mb-4 flex items-center gap-2 font-bold text-gray-700">
-            <CalendarOutlined className="text-purple-500" />
-            Jadwal Pelajaran
-            <Badge count={classSchedule.length} color="purple" showZero />
-          </h3>
-
-          {loadingSubjectsSchedule ? (
-            <Skeleton active />
-          ) : classSchedule.length === 0 ? (
-            <Empty
-              description={
-                academic?.id
-                  ? 'Belum ada jadwal untuk kelas ini'
-                  : 'Pilih kalender akademik terlebih dahulu'
-              }
-              image={Empty.PRESENTED_IMAGE_SIMPLE}
-            />
-          ) : (
-            <div className="space-y-5">
-              {DAY_ORDER.filter((day) => scheduleByDay[day].length > 0).map(
-                (day) => (
-                  <div key={day}>
-                    <div className="mb-2 flex items-center gap-3">
-                      <Tag
-                        color={DAY_COLORS[day]}
-                        className="rounded-full text-sm font-semibold"
-                      >
-                        {DAY_LABELS[day]}
-                      </Tag>
-                      <div className="h-px flex-1 bg-gray-100" />
-                    </div>
-                    <div className="space-y-2 pl-2">
-                      {scheduleByDay[day].map((s) => (
-                        <div
-                          key={s.id}
-                          className="flex items-center gap-3 rounded-xl border border-gray-100 bg-gray-50 px-4 py-3"
-                        >
-                          <ClockCircleOutlined className="shrink-0 text-gray-400" />
-                          <span className="w-24 shrink-0 font-mono text-sm font-semibold text-gray-700">
-                            {dayjs(s.startTime).format(TIME_FORMAT)}
-                            {' – '}
-                            {dayjs(s.endTime).format(TIME_FORMAT)}
-                          </span>
-                          <Tag color="blue" className="m-0 shrink-0">
-                            {s.subject?.name}
-                          </Tag>
-                          {s.teacher && (
-                            <span className="text-sm text-gray-500">
-                              <UserOutlined className="mr-1" />
-                              {s.teacher.name}
-                            </span>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ),
-              )}
-            </div>
-          )}
-        </div>
+        )}
       </div>
 
       {/* Edit Modal */}
@@ -407,23 +369,6 @@ export default function Page({
               }))}
               placeholder="Pilih mata pelajaran"
               loading={loadingSubjects}
-              showSearch
-              filterOption={(input, option) =>
-                String(option?.label ?? '')
-                  .toLowerCase()
-                  .includes(input.toLowerCase())
-              }
-            />
-          </Form.Item>
-          <Form.Item name="students" label="Siswa">
-            <SelectComp
-              mode="multiple"
-              options={students?.map((item) => ({
-                value: item.id,
-                label: item.name,
-              }))}
-              placeholder="Pilih siswa"
-              loading={loadingStudents}
               showSearch
               filterOption={(input, option) =>
                 String(option?.label ?? '')

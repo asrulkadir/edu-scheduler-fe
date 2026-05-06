@@ -21,6 +21,9 @@ export type TCreateTeacherRequest = {
   phone?: string;
   address?: string;
   subjects?: TNameId[];
+  username: string;
+  email: string;
+  password: string;
 };
 
 export type TUpdateTeacherRequest = {

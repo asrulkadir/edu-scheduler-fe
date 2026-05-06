@@ -12,27 +12,31 @@ import { useContext, useState } from 'react';
 import { UserContext } from '@/context/UserContext';
 import { ERole } from '@/libs/utils/enum';
 import EditableTable from '@/components/EditableTable';
-import {
-  Button,
-  Form,
-  Input,
-  message,
-  Modal,
-  Select,
-  TableColumnProps,
-} from 'antd';
+import { Button, Form, Input, Modal, Select, TableColumnProps } from 'antd';
 import { getDifferences } from '@/libs/utils/helpers';
+import { useMessage } from '@/hooks/useMessage';
+import { useTeacher } from '@/hooks/useTeacher';
 
 const Page = () => {
+  const message = useMessage();
   const { user } = useContext(UserContext);
   const { users, loadingUsers, mutate } = useUsers();
   const { updateUser, loadingUpdateUser } = useUpdateUser();
   const { deleteUser, loadingDeleteUser } = useDeleteUser();
   const { createUser, loadingCreateUser } = useCreateUser();
+  const { teachers, loadingTeachers } = useTeacher();
   const [open, setOpen] = useState(false);
+  const [selectedRole, setSelectedRole] = useState<string | undefined>(
+    undefined,
+  );
   const [form] = Form.useForm();
 
   const data = users ?? [];
+
+  // Teachers that don't yet have a linked user account
+  const availableTeachers = (teachers ?? []).filter(
+    (t) => !data.some((u) => u.teacherId === t.id),
+  );
 
   const handleSave = async (key: React.Key, row: TUser) => {
     const newData = {
@@ -113,6 +117,8 @@ const Page = () => {
 
   const handleCancel = () => {
     setOpen(false);
+    setSelectedRole(undefined);
+    form.resetFields();
   };
 
   const onFinish = (values: TCreateUserRequest) => {
@@ -124,6 +130,7 @@ const Page = () => {
         message.success(data.message);
         mutate();
         form.resetFields();
+        setSelectedRole(undefined);
         setOpen(false);
       },
     });
@@ -174,11 +181,66 @@ const Page = () => {
       >
         <Form onFinish={onFinish} layout="vertical" form={form}>
           <Form.Item<TCreateUserRequest>
+            label="Role"
+            name="role"
+            rules={[{ required: true, message: 'Harap pilih role!' }]}
+          >
+            <Select
+              options={[
+                { value: ERole.ADMIN, label: 'Admin' },
+                { value: ERole.TEACHER, label: 'Guru' },
+              ]}
+              placeholder="Pilih role"
+              onChange={(val) => {
+                setSelectedRole(val);
+                form.setFieldsValue({ teacherId: undefined, name: undefined });
+              }}
+            />
+          </Form.Item>
+
+          {selectedRole === ERole.TEACHER && (
+            <Form.Item<TCreateUserRequest>
+              label="Profil Guru"
+              name="teacherId"
+              rules={[{ required: true, message: 'Harap pilih profil guru!' }]}
+              extra="Hanya guru yang belum memiliki akun login"
+            >
+              <Select
+                loading={loadingTeachers}
+                placeholder="Cari dan pilih profil guru"
+                showSearch
+                filterOption={(input, option) =>
+                  (option?.label as string)
+                    ?.toLowerCase()
+                    .includes(input.toLowerCase())
+                }
+                options={availableTeachers.map((t) => ({
+                  value: t.id,
+                  label: t.name,
+                }))}
+                onChange={(val) => {
+                  const teacher = availableTeachers.find((t) => t.id === val);
+                  if (teacher) {
+                    form.setFieldValue('name', teacher.name);
+                  }
+                }}
+              />
+            </Form.Item>
+          )}
+
+          <Form.Item<TCreateUserRequest>
             label="Nama"
             name="name"
-            rules={[{ required: true, message: 'Harap masukkan nama anda!' }]}
+            rules={[{ required: true, message: 'Harap masukkan nama!' }]}
           >
-            <Input placeholder="Masukkan nama" />
+            <Input
+              placeholder={
+                selectedRole === ERole.TEACHER
+                  ? 'Otomatis terisi dari profil guru'
+                  : 'Masukkan nama'
+              }
+              disabled={selectedRole === ERole.TEACHER}
+            />
           </Form.Item>
 
           <Form.Item<TCreateUserRequest>
@@ -204,24 +266,9 @@ const Page = () => {
           </Form.Item>
 
           <Form.Item<TCreateUserRequest>
-            label="Role"
-            name="role"
-            rules={[{ required: true, message: 'Harap pilih role!' }]}
-          >
-            <Select
-              options={[
-                { value: ERole.ADMIN, label: ERole.ADMIN },
-                { value: ERole.TEACHER, label: ERole.TEACHER },
-                { value: ERole.STUDENT, label: ERole.STUDENT },
-              ]}
-              placeholder="Pilih role"
-            />
-          </Form.Item>
-
-          <Form.Item<TCreateUserRequest>
             label="Password"
             name="password"
-            rules={[{ required: true, message: 'Harap massukkan password!' }]}
+            rules={[{ required: true, message: 'Harap masukkan password!' }]}
           >
             <Input.Password placeholder="Masukkan password" />
           </Form.Item>

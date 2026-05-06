@@ -12,6 +12,7 @@ export type TUser = {
     | ERole.SUPERADMIN
     | ERole.NONE;
   clientId: string;
+  teacherId?: string;
 };
 
 export type TUpdateUserRequest = {
@@ -34,6 +35,7 @@ export type TCreateUserRequest = {
   password: string;
   username: string;
   confirmPassword?: string;
+  teacherId?: string;
 };
 
 export type TRegisterUserRequest = {

@@ -2,20 +2,11 @@
 
 import { useContext } from 'react';
 import { Card, Col, Row, Spin, Tag, Typography } from 'antd';
-import {
-  UserOutlined,
-  TeamOutlined,
-  BookOutlined,
-  HomeOutlined,
-  CalendarOutlined,
-  ScheduleOutlined,
-} from '@ant-design/icons';
+import { UserOutlined, BookOutlined, HomeOutlined } from '@ant-design/icons';
 import { UserContext } from '@/context/UserContext';
 import { useTeacher } from '@/hooks/useTeacher';
-import { useStudents } from '@/hooks/useStudent';
 import { useClass } from '@/hooks/useClass';
 import { useSubjects } from '@/hooks/useSubjects';
-import { useAcademicCalendars } from '@/hooks/useAcademicCalendar';
 import { useSubjectsSchedule } from '@/hooks/useSubjectsSchedule';
 import { DAY_LABELS, TDay } from '@/libs/types/subjectsSchedule';
 import { ERole } from '@/libs/utils/enum';
@@ -82,11 +73,8 @@ const Page = () => {
   const isAdmin = user.role === ERole.ADMIN || user.role === ERole.SUPERADMIN;
 
   const { teachers, loadingTeachers } = useTeacher();
-  const { students, loadingStudents } = useStudents();
   const { classesData, loadingClass } = useClass();
   const { subjects, loadingSubjects } = useSubjects();
-  const { academicCalendars, loadingAcademicCalendars } =
-    useAcademicCalendars();
   const { subjectsSchedule, loadingSubjectsSchedule } = useSubjectsSchedule(
     academic?.id,
   );
@@ -125,15 +113,6 @@ const Page = () => {
             </Col>
             <Col xs={24} sm={12} lg={8}>
               <StatCard
-                title="Total Siswa"
-                value={students?.length ?? 0}
-                icon={<TeamOutlined />}
-                loading={loadingStudents}
-                color="#0891b2"
-              />
-            </Col>
-            <Col xs={24} sm={12} lg={8}>
-              <StatCard
                 title="Total Kelas"
                 value={classesData?.length ?? 0}
                 icon={<HomeOutlined />}
@@ -148,24 +127,6 @@ const Page = () => {
                 icon={<BookOutlined />}
                 loading={loadingSubjects}
                 color="#d97706"
-              />
-            </Col>
-            <Col xs={24} sm={12} lg={8}>
-              <StatCard
-                title="Total Kalender Akademik"
-                value={academicCalendars?.length ?? 0}
-                icon={<CalendarOutlined />}
-                loading={loadingAcademicCalendars}
-                color="#dc2626"
-              />
-            </Col>
-            <Col xs={24} sm={12} lg={8}>
-              <StatCard
-                title="Jadwal Hari Ini"
-                value={todaySchedule.length}
-                icon={<ScheduleOutlined />}
-                loading={loadingSubjectsSchedule}
-                color="#7c3aed"
               />
             </Col>
           </Row>

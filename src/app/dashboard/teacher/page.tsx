@@ -163,6 +163,7 @@ const Page = () => {
       onSuccess(data) {
         message.success(data.message);
         mutateTeachers();
+        form.resetFields();
         setOpen(false);
       },
     });
@@ -269,6 +270,50 @@ const Page = () => {
               }))}
               placeholder="Pilih mata pelajaran"
             />
+          </Form.Item>
+
+          <div className="my-4 border-t border-gray-200" />
+          <p className="mb-3 text-xs font-semibold tracking-wide text-gray-400 uppercase">
+            Akun Login
+          </p>
+
+          <Form.Item<TCreateTeacherRequest>
+            name="username"
+            label="Username"
+            rules={[
+              { required: true, message: 'Username harus diisi' },
+              {
+                pattern: /^[a-zA-Z0-9_]+$/,
+                message: 'Username hanya boleh huruf, angka, dan underscore',
+              },
+            ]}
+          >
+            <Input placeholder="Masukkan username" />
+          </Form.Item>
+          <Form.Item<TCreateTeacherRequest>
+            name="email"
+            label="Email"
+            rules={[
+              { required: true, message: 'Email harus diisi' },
+              { type: 'email', message: 'Format email tidak valid' },
+            ]}
+          >
+            <Input placeholder="Masukkan email" />
+          </Form.Item>
+          <Form.Item<TCreateTeacherRequest>
+            name="password"
+            label="Password"
+            rules={[
+              { required: true, message: 'Password harus diisi' },
+              { min: 6, message: 'Password minimal 6 karakter' },
+              {
+                pattern: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{6,}$/,
+                message:
+                  'Password harus mengandung huruf besar, huruf kecil, dan angka',
+              },
+            ]}
+          >
+            <Input.Password placeholder="Masukkan password" />
           </Form.Item>
         </Form>
       </Modal>

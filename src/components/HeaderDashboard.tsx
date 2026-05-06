@@ -39,7 +39,6 @@ const HeaderDashboard = () => {
     messageApi.open({
       type: 'loading',
       content: 'Logging out...',
-      duration: 0,
     });
     await logout();
     router.push('/login');
