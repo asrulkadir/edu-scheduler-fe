@@ -8,9 +8,22 @@ import { TSubjectsSchedule } from '@/libs/types/subjectsSchedule';
 import useSWR, { SWRResponse } from 'swr';
 import useSWRMutation from 'swr/mutation';
 
-export const useSubjectsSchedule = (academicCalendarId?: string) => {
+export const useSubjectsSchedule = (
+  academicCalendarId?: string,
+  filters?: {
+    subjectId?: string | null;
+    teacherId?: string | null;
+    classId?: string | null;
+  },
+) => {
+  const params = new URLSearchParams();
+  if (academicCalendarId) params.set('academicCalendarId', academicCalendarId);
+  if (filters?.subjectId) params.set('subjectId', filters.subjectId);
+  if (filters?.teacherId) params.set('teacherId', filters.teacherId);
+  if (filters?.classId) params.set('classId', filters.classId);
+
   const key = academicCalendarId
-    ? `/api/subjects-schedule?academicCalendarId=${academicCalendarId}`
+    ? `/api/subjects-schedule?${params.toString()}`
     : null;
 
   const {

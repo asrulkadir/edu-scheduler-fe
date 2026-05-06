@@ -5,6 +5,7 @@ import { RootStyleRegistry } from '@/components/RootStyleRegistry';
 import SwrProvider from './swrProvider';
 import ContextProvider from '@/context/ContextProvider';
 import NextTopLoader from 'nextjs-toploader';
+import { NuqsAdapter } from 'nuqs/adapters/next/app';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -23,11 +24,13 @@ export default function RootLayout({
       <body className={inter.className} suppressHydrationWarning>
         <NextTopLoader />
         <main className="flex min-h-screen flex-col">
-          <SwrProvider>
-            <RootStyleRegistry>
-              <ContextProvider>{children}</ContextProvider>
-            </RootStyleRegistry>
-          </SwrProvider>
+          <NuqsAdapter>
+            <SwrProvider>
+              <RootStyleRegistry>
+                <ContextProvider>{children}</ContextProvider>
+              </RootStyleRegistry>
+            </SwrProvider>
+          </NuqsAdapter>
         </main>
       </body>
     </html>

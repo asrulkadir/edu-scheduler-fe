@@ -237,7 +237,7 @@ const Page = () => {
             <Select
               options={[
                 { value: EGender.male, label: 'Laki-laki' },
-                { varlue: EGender.female, label: 'Perempuan' },
+                { value: EGender.female, label: 'Perempuan' },
               ]}
               placeholder="Pilih jenis kelamin"
             />

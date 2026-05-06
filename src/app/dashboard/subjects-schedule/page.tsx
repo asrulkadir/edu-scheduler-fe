@@ -30,7 +30,9 @@ import {
 } from '@/hooks/useSubjectsSchedule';
 import { useSubjects } from '@/hooks/useSubjects';
 import { useClass } from '@/hooks/useClass';
+import { useTeacher } from '@/hooks/useTeacher';
 import { useContext, useState } from 'react';
+import { useQueryState } from 'nuqs';
 import {
   DAY_LABELS,
   TCreateSubjectsScheduleRequest,
@@ -102,12 +104,19 @@ const Page = () => {
   const [selectedSubjectId, setSelectedSubjectId] = useState<string | null>(
     null,
   );
+  const [filterSubjectId, setFilterSubjectId] = useQueryState('subjectId');
+  const [filterTeacherId, setFilterTeacherId] = useQueryState('teacherId');
+  const [filterClassId, setFilterClassId] = useQueryState('classId');
   const { user, academic } = useContext(UserContext);
 
   const canManage = user.role === ERole.ADMIN || user.role === ERole.SUPERADMIN;
 
   const { subjectsSchedule, loadingSubjectsSchedule, mutateSubjectsSchedule } =
-    useSubjectsSchedule(academic?.id);
+    useSubjectsSchedule(academic?.id, {
+      subjectId: filterSubjectId,
+      teacherId: filterTeacherId,
+      classId: filterClassId,
+    });
   const { createSubjectsSchedule, loadingCreateSubjectsSchedule } =
     useCreateSubjectsSchedule();
   const { updateSubjectsSchedule, loadingUpdateSubjectsSchedule } =
@@ -116,10 +125,17 @@ const Page = () => {
 
   const { subjects, loadingSubjects } = useSubjects();
   const { classesData, loadingClass } = useClass();
+  const { teachers, loadingTeachers } = useTeacher();
 
   const filteredTeachers = selectedSubjectId
     ? (subjects?.find((s) => s.id === selectedSubjectId)?.teacher ?? [])
     : [];
+
+  const hasActiveFilter = !!(
+    filterSubjectId ||
+    filterTeacherId ||
+    filterClassId
+  );
 
   const scheduleByDay = DAY_ORDER.reduce(
     (acc, day) => {
@@ -234,7 +250,8 @@ const Page = () => {
             Jadwal Mata Pelajaran
           </h1>
           <p className="text-sm text-gray-500">
-            {subjectsSchedule?.length ?? 0} jadwal terdaftar
+            {subjectsSchedule?.length ?? 0} jadwal
+            {hasActiveFilter ? ' (difilter)' : ' terdaftar'}
           </p>
         </div>
         {canManage && (
@@ -249,6 +266,69 @@ const Page = () => {
           </Button>
         )}
       </div>
+
+      {/* Filter bar */}
+      {!!academic?.id && (
+        <div className="mb-6 flex flex-wrap items-center gap-3">
+          <Select
+            allowClear
+            placeholder="Filter Mata Pelajaran"
+            loading={loadingSubjects}
+            value={filterSubjectId ?? undefined}
+            onChange={(val) => setFilterSubjectId(val ?? null)}
+            options={subjects?.map((s) => ({ value: s.id, label: s.name }))}
+            showSearch={{
+              filterOption: (input, option) =>
+                String(option?.label ?? '')
+                  .toLowerCase()
+                  .includes(input.toLowerCase()),
+            }}
+            className="min-w-48"
+          />
+          <Select
+            allowClear
+            placeholder="Filter Guru"
+            loading={loadingTeachers}
+            value={filterTeacherId ?? undefined}
+            onChange={(val) => setFilterTeacherId(val ?? null)}
+            options={teachers?.map((t) => ({ value: t.id, label: t.name }))}
+            showSearch={{
+              filterOption: (input, option) =>
+                String(option?.label ?? '')
+                  .toLowerCase()
+                  .includes(input.toLowerCase()),
+            }}
+            className="min-w-48"
+          />
+          <Select
+            allowClear
+            placeholder="Filter Kelas"
+            loading={loadingClass}
+            value={filterClassId ?? undefined}
+            onChange={(val) => setFilterClassId(val ?? null)}
+            options={classesData?.map((c) => ({ value: c.id, label: c.name }))}
+            showSearch={{
+              filterOption: (input, option) =>
+                String(option?.label ?? '')
+                  .toLowerCase()
+                  .includes(input.toLowerCase()),
+            }}
+            className="min-w-40"
+          />
+          {hasActiveFilter && (
+            <Button
+              size="small"
+              onClick={() => {
+                setFilterSubjectId(null);
+                setFilterTeacherId(null);
+                setFilterClassId(null);
+              }}
+            >
+              Reset Filter
+            </Button>
+          )}
+        </div>
+      )}
 
       {/* Day summary pills */}
       {!loadingSubjectsSchedule && (subjectsSchedule?.length ?? 0) > 0 && (
@@ -275,6 +355,8 @@ const Page = () => {
           <Skeleton active />
           <Skeleton active />
         </div>
+      ) : hasActiveFilter && (subjectsSchedule?.length ?? 0) === 0 ? (
+        <Empty description="Tidak ada jadwal yang sesuai filter" />
       ) : (subjectsSchedule?.length ?? 0) === 0 ? (
         <Empty
           description={
